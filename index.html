@@ -1,174 +1,153 @@
 
-
-
-
-
-
-
-
-
-<!doctype html>
-<html lang="en">
-
-<script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
-<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.js">
-</script>
-<link href="/plugins/code-theme/tomorrow.css" type="text/css" rel="stylesheet">
-<link rel="stylesheet" href="/plugins/github-markdown.css">
-
+<!DOCTYPE html>
+<html lang="en" class="loading">
 <head><meta name="generator" content="Hexo 3.9.0">
-  <meta charset="UTF-8" name="viewport" content="width=device-width,initial-scale=1">
-  
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>lonely - lonely</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate">
+    <meta name="keywords" content="Fechin,"> 
+    <meta name="description" content="Lonely&#39;s blog,"> 
+    <meta name="author" content="kk"> 
+    <link rel="alternative" href="atom.xml" title="lonely" type="application/atom+xml"> 
     
-    
-      <link rel="stylesheet" href="/css/legend.css">
-    
-  
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+    <link rel="stylesheet" href="/css/diaspora.css">
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+              google_ad_client: "ca-pub-8691406134231910",
+              enable_page_level_ads: true
+         });
+    </script>
+    <script async custom-element="amp-auto-ads" src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+    </script>
 </head>
-
-<body id="body-home-bg">
-<div id="layout-content">
-  <div id="menu-outer-home">
-  <div id="menu-inner">
-    
-    
-    <div id="site-title">
-      lonely
-    </div>
-    
-
-     
-    <div>
-    
-      
-      <a href="/">首页</a>
-      
-    
-      
-      <a href="/archives">归档</a>
-      
-    
-    </div>
-  </div>
-</div> 
-  <div id="content-outer">
-    <div id="content-inner">
-      
-      
-  
-
-<video id="bgvideo" autoplay playsinline loop poster="/images/background.png">
-  <source src="http://cdn.calm.com/scenes/scene-Qqkzy9k7Eo.mp4?v=1418162238190" type="video/mp4">
-</video>
-
-
-
-
-<div id="me-button">
-		<img id="play-img" src="/images/me_n.png">
-		
-</div>
-
-<div id="social-div">
-
-
-    
-    
-    <a class="social-a" href="https://github.com/gaoyakang" target="_blank">
-        <img src="/images/github.png">
-    </a>
-    
-
-    
-    
-    <a class="social-a" href="https://facebook.com" target="_blank">
-        <img src="/images/facebook.png">
-    </a>
-    
-
-
-</div>
-
-
-<div id="about-me">
-  <div id="about-me-inner">
-    <article class="markdown-body"></article>
-  </div>
-</div>
-
-
-<!--[if lt IE 9]>
-<script>
-	document.createElement('video');
-</script>
-<![endif]-->
-
-
-<script>
-
-$(document).ready(function(){
-  //判断是否该显示’关于我‘
-  if( "home_about"  == 'home_about') {
-    $("#about-me").hide(0);
-
-    //加载about(关于)读取文件
-    var s = $('article').html();
-    if (s.length < 2) {
-      var url = window.location.protocol+"//"+window.location.host+"/about/";
-      $.ajax({ 
-          type: "GET", 
-          url: url, 
-          dataType: "html", 
-          success: function (data) { 
-            $('article').html($(data).find('article').html());//解析about的html
-            $("#about-me").css({"visibility": "visible"}).delay(100);
-            $("#about-me").slideToggle('slow');
-          }
-      }); 
-      }
-
-    //个人按钮点击，隐藏和显示关于界面
-    $("#me-button").click(function(){ 
-      $("#social-div").slideToggle();
-      $("#about-me").slideToggle();
-    });
-  }
-});
-</script>
-
-
-
-    </div>
-  </div>
-</div>
-
-
-
-<div id="bottom-outer">
-  
-  <div id="bottom-inner">
-    kk 
-    ©2019
-  </div>
-    
-    
-     
-
-
-  
-  
-    <script src="/js/legend.js"></script>
-  
-
-
-</div></body>
 </html>
+<body class="loading">
+    <span id="config-title" style="display:none">lonely</span>
+    <div id="loader"></div>
+    <div class="nav">
+    <ul id="menu-menu" class="menu">
+        
+        <li class="pview menu-item menu-item-type-post_type menu-item-object-page">
+            <a href="/categories/" title="分类" target="_blank" rel="noopener">分类</a>
+        </li>
+        
+        <li class="pview menu-item menu-item-type-post_type menu-item-object-page">
+            <a href="/archives/" title="归档" target="_blank" rel="noopener">归档</a>
+        </li>
+        
+        <li class="  menu-item menu-item-type-post_type menu-item-object-page">
+            <a href="https://github.com/gaoyakang" title="Github" target="_blank" rel="noopener">Github</a>
+        </li>
+        
+    </ul>
+    <p id="copyright">
+        &copy; 2019 kk.
+    </p>
+</div>
+
+<div id="container">
+    
+<div id="screen">
+    <div id="mark">
+        <div class="layer" data-depth="0.4">
+            <img src="/img/welcome-cover.jpg" id="cover" crossorigin="anonymous" width="1920" height="1080">
+        </div>
+    </div>
+    <div id="vibrant">
+        <svg viewBox="0 0 2880 1620" height="100%" preserveAspectRatio="xMaxYMax slice">
+            <polygon opacity="0.7" points="2000,1620 0,1620 0,0 600,0 "/>
+        </svg>
+        <div></div>
+    </div>
+    <div id="header">
+        <div>
+            <a class="image-logo" href="/"></a>
+            <div class="icon-menu switchmenu"></div>
+        </div>
+    </div>
+    
+    <div id="post0">
+        <p>十月 14, 2019</p>
+        <h2><a href="/2019/10/14/h5之canvas/" title="h5之canvas" class="posttitle">h5之canvas</a></h2>
+        <p class="summary">#HTML5 Canvas
+
+canvas是html5新加的标签，主要有2D和3D，2D的应用是动画和图像，3D的...</p>
+    </div>
+    
+</div>
+
+    <div id="primary">
+        
+    </div>
+    
+</div>
+<div id="preview"></div>
+
+</body>
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/diaspora.js"></script>
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
 
 
-<script>
-$(window).on('load', function(){
-   $('pre').addClass('prettyprint').attr('style', 'overflow:auto;');
-   prettyPrint();
- });
-</script>
 
+
+</html>
