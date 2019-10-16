@@ -11,10 +11,9 @@
     <meta name="google" content="notranslate">
     <meta name="keywords" content="node,"> 
     <meta name="description" content="Lonely&#39;s blog,BOTTOM
-## jsW3C标准
-&gt; 要想学会js，除了要理解前面几篇文章说的ECMA规范语法，还需要熟悉W3C的标准，比如DOM,BOM,Ajax等。
 
-1.JS之DOM1.1 基础知识首先说D,"> 
+要想学会js，除了要理解前面几篇文章说的ECMA规范语法，还需要熟悉W3C的标准，比如DOM,BOM,Ajax等。
+1.JS之DOM1.1 基础知识首先说DOM，先来看一下它的分类：,"> 
     <meta name="author" content="kk"> 
     <link rel="alternative" href="atom.xml" title="GYK" type="application/atom+xml"> 
     
@@ -65,9 +64,8 @@
         </div>
         <div class="content markdown">
             <div style="text-align:center;margin:30px;font-size:20px;border-radius:5px;border:3px solid #eee; cursor:pointer;" onclick="javascript:window.scrollTo(0, document.body.clientHeight)">BOTTOM</div>
-## jsW3C标准
-> 要想学会js，除了要理解前面几篇文章说的ECMA规范语法，还需要熟悉W3C的标准，比如DOM,BOM,Ajax等。
 
+<p><code>要想学会js，除了要理解前面几篇文章说的ECMA规范语法，还需要熟悉W3C的标准，比如DOM,BOM,Ajax等。</code></p>
 <h2 id="1-JS之DOM"><a href="#1-JS之DOM" class="headerlink" title="1.JS之DOM"></a>1.JS之DOM</h2><h3 id="1-1-基础知识"><a href="#1-1-基础知识" class="headerlink" title="1.1 基础知识"></a>1.1 基础知识</h3><p><code>首先说DOM，先来看一下它的分类：</code></p>
 <p><code>1.DOM是操作页面的接口，它将页面上的元素转化为节点后分为7种类型，这7种类型的节点对象除了继承了node，parentNode，childNode的属性和方法，还继承了EventTatget的属性和方法。</code></p>
 <p><code>2.节点对象分为单个节点对象（Document，DocumentType，Element，Attribute，Text，Comment，DocumentFragment）和容纳多个节点对象的复合节点对象（nodeList和HTMLCollection）</code></p>
@@ -147,7 +145,7 @@
 
 <p><img src="//gaoyakang.github.io/2018/06/20/jsW3C标准/7.gif" alt="sfgt"></p>
 <h2 id="3-跨域实战"><a href="#3-跨域实战" class="headerlink" title="3.跨域实战"></a>3.跨域实战</h2><p><code>除了DOM和BOM，ajax请求，同源策略，cookie也属于w3c标准内容，接着就以前端跨域来串联这些知识：</code></p>
-<h3 id="3-1跨域请求"><a href="#3-1跨域请求" class="headerlink" title="3.1跨域请求"></a>3.1跨域请求</h3><p><code>首先以跨域来说ajax和同源策略，当在本地发起请求的时候，由于协议不同就会硬气同源策略的限制，即协议域名端口有一个不一样就不能成功请求，为了解决这个问题就要用到跨域手段，具体看代码，大概意思是浏览器发起post请求，服务端接收到后返回success，浏览器端显示返回的内容：</code></p>
+<h3 id="3-1跨域请求"><a href="#3-1跨域请求" class="headerlink" title="3.1跨域请求"></a>3.1跨域请求</h3><p><code>首先以跨域来说ajax和同源策略，当在本地发起请求的时候，由于协议不同就会引起同源策略的限制，即协议域名端口有一个不一样就不能成功请求，为了解决这个问题就要用到跨域手段，具体看代码，大概意思是浏览器发起post请求，服务端接收到后返回success，浏览器端显示返回的内容：</code></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">//index.html</span><br><span class="line">&lt;!DOCTYPE HTML&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line"></span><br><span class="line">&lt;form&gt;</span><br><span class="line">  &lt;input type=&quot;text&quot; id=&quot;val&quot;/&gt;</span><br><span class="line">&lt;/form&gt;</span><br><span class="line">&lt;button id=&quot;button&quot;&gt;submit&lt;/button&gt;</span><br><span class="line">&lt;div id=&quot;item&quot;&gt;&lt;/div&gt;</span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line">	var val = document.getElementById(&apos;val&apos;);</span><br><span class="line">	var button = document.getElementById(&apos;button&apos;);</span><br><span class="line">	var item = document.getElementById(&apos;item&apos;);</span><br><span class="line"></span><br><span class="line">	button.addEventListener(&apos;click&apos;,function()&#123;</span><br><span class="line">	</span><br><span class="line">		var oAjax = new XMLHttpRequest();</span><br><span class="line">		oAjax.open(&apos;POST&apos;, &apos;http://localhost:8005&apos;, false);</span><br><span class="line">		oAjax.setRequestHeader(&quot;Content-type&quot;, &quot;application/*&quot;);</span><br><span class="line">		var data = &#123;</span><br><span class="line">			value:val.value</span><br><span class="line">		&#125;;</span><br><span class="line">		oAjax.onreadystatechange = function() &#123;</span><br><span class="line">				    if (oAjax.readyState == 4 &amp;&amp; oAjax.status == 200) &#123;</span><br><span class="line">				        item.innerHTML = oAjax.responseText;</span><br><span class="line">				    &#125; else &#123;</span><br><span class="line">				        console.log(oAjax);</span><br><span class="line">				    &#125;</span><br><span class="line">				&#125;;</span><br><span class="line">		oAjax.send(JSON.stringify(data));</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">	&#125;)</span><br><span class="line"></span><br><span class="line">&lt;/script&gt;</span><br><span class="line"></span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
 
 <p><code>这样写的时候，由于html文件的协议是file，所以为了解决跨域问题，需要服务端进行设置</code></p>
@@ -162,8 +160,7 @@
 <li><code>任意：http://localhost/*</code></li>
 </ul>
 <p><code>2.当访问http://localhost/api/user时，服务端会判断是否存在cookie，如果没有，就会返回You have no right</code></p>
-<p>`3.为了能够获得user下的内容，我们就需要<a href="http://localhost/api/login?username=kk&amp;password=123登录" target="_blank" rel="noopener">http://localhost/api/login?username=kk&amp;password=123登录</a>,</p>
-<p>当这样访问时，后台就会判断账号密码是否正确`</p>
+<p><code>3.为了能够获得user下的内容，我们就需要‘http://localhost/api/login?username=kk&amp;password=123’登录,当这样访问时，后台就会判断账号密码是否正确</code></p>
 <ul>
 <li><code>账号密码正确时服务端就会将username放在cookie中传回客户端，同时渲染login success</code></li>
 <li><code>账号密码不正确时不会返回cookie，但会返回login error</code></li>
