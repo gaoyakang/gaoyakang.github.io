@@ -1,0 +1,257 @@
+
+<!DOCTYPE html>
+<html lang="en" class="loading">
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>html之从URL到页面 - GYK</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate">
+    <meta name="keywords" content="node,"> 
+    <meta name="description" content="Lonely&#39;s blog,BOTTOM
+
+一个老生常谈的问题，从输入url到页面渲染完成之间发生了什么？
+在这个过程中包括以下2大部分：
+
+1.http请求响应*
+2.渲染*
+
+1.http请求响应先来提三个问题：1.当输入,"> 
+    <meta name="author" content="kk"> 
+    <link rel="alternative" href="atom.xml" title="GYK" type="application/atom+xml"> 
+    
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+    <link rel="stylesheet" href="/css/diaspora.css">
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+              google_ad_client: "ca-pub-8691406134231910",
+              enable_page_level_ads: true
+         });
+    </script>
+    <script async custom-element="amp-auto-ads" src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+    </script>
+</head>
+</html>
+<body class="loading">
+    <span id="config-title" style="display:none">GYK</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="icon-home image-icon" href="javascript:;" data-url="https://gaoyakang.github.io"></a>
+    <div title="播放/暂停" class="icon-play"></div>
+    <h3 class="subtitle">html之从URL到页面</h3>
+    <div class="social">
+        <!--<div class="like-icon">-->
+            <!--<a href="javascript:;" class="likeThis active"><span class="icon-like"></span><span class="count">76</span></a>-->
+        <!--</div>-->
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">html之从URL到页面</h1>
+        <div class="stuff">
+            <span>十一月 15, 2018</span>
+            
+
+        </div>
+        <div class="content markdown">
+            <div style="text-align:center;margin:30px;font-size:20px;border-radius:5px;border:3px solid #eee; cursor:pointer;" onclick="javascript:window.scrollTo(0, document.body.clientHeight)">BOTTOM</div>
+
+<p><code>一个老生常谈的问题，从输入url到页面渲染完成之间发生了什么？</code></p>
+<p><code>在这个过程中包括以下2大部分：</code></p>
+<ul>
+<li>1.http请求响应*</li>
+<li>2.渲染*</li>
+</ul>
+<h1 id="1-http请求响应"><a href="#1-http请求响应" class="headerlink" title="1.http请求响应"></a>1.http请求响应</h1><p><code>先来提三个问题：</code><br><code>1.当输入url后，浏览器如何包装发起请求？</code><br><code>2.在发出请求--接到响应之间发生了什么？</code><br><code>3.当返回请求结果后，浏览器如何解析结果？</code></p>
+<h2 id="1-1-请求"><a href="#1-1-请求" class="headerlink" title="1.1 请求"></a>1.1 请求</h2><p><code>1.1.1 GET请求包装</code><br><code>1.为了知道浏览器是如何包装http请求的，使用nodejs搭建服务器</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">const http = require(&apos;http&apos;);</span><br><span class="line"></span><br><span class="line">const server = http.createServer((req,res) =&gt; &#123;</span><br><span class="line">	if(req.url === &apos;/&apos;)&#123;</span><br><span class="line">		res.end(&apos;hello&apos;)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">server.listen(8005,() =&gt; &#123;</span><br><span class="line">	console.log(&apos;server listen on http://localhost:8005&apos;)</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p><code>2.服务器搭建好了，需要知道浏览器到底包装了什么信息，直接看控制台：</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">Request URL: http://localhost:8005/</span><br><span class="line">Request Method: GET</span><br><span class="line">Status Code: 200 OK</span><br><span class="line">Remote Address: [::1]:8005</span><br><span class="line">Referrer Policy: no-referrer-when-downgrade</span><br><span class="line">Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3</span><br><span class="line">Accept-Encoding: gzip, deflate, br</span><br><span class="line">Accept-Language: zh-CN,zh;q=0.9,en;q=0.8</span><br><span class="line">Cache-Control: max-age=0</span><br><span class="line">Connection: keep-alive</span><br><span class="line">Host: localhost:8005</span><br><span class="line">Upgrade-Insecure-Requests: 1</span><br><span class="line">User-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36</span><br></pre></td></tr></table></figure>
+
+<p><code>1.1.2 POST请求包装</code><br><code>这些是浏览器自动包装过后的请求，包括请求行，请求头和请求主体，浏览器默认发送的是GET请求，如果需要指定POST请求，可以写个表单来验证一下,大概意思是浏览器发起post请求，服务端接收到后返回success，浏览器端显示返回的内容</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">//index.html</span><br><span class="line">&lt;!DOCTYPE HTML&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line"></span><br><span class="line">&lt;form&gt;</span><br><span class="line">  &lt;input type=&quot;text&quot; id=&quot;val&quot;/&gt;</span><br><span class="line">&lt;/form&gt;</span><br><span class="line">&lt;button id=&quot;button&quot;&gt;submit&lt;/button&gt;</span><br><span class="line">&lt;div id=&quot;item&quot;&gt;&lt;/div&gt;</span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line">	var val = document.getElementById(&apos;val&apos;);</span><br><span class="line">	var button = document.getElementById(&apos;button&apos;);</span><br><span class="line">	var item = document.getElementById(&apos;item&apos;);</span><br><span class="line"></span><br><span class="line">	button.addEventListener(&apos;click&apos;,function()&#123;</span><br><span class="line">	</span><br><span class="line">		var oAjax = new XMLHttpRequest();</span><br><span class="line">		oAjax.open(&apos;POST&apos;, &apos;http://localhost:8005&apos;, false);</span><br><span class="line">		oAjax.setRequestHeader(&quot;Content-type&quot;, &quot;application/*&quot;);</span><br><span class="line">		var data = &#123;</span><br><span class="line">			value:val.value</span><br><span class="line">		&#125;;</span><br><span class="line">		oAjax.onreadystatechange = function() &#123;</span><br><span class="line">				    if (oAjax.readyState == 4 &amp;&amp; oAjax.status == 200) &#123;</span><br><span class="line">				        item.innerHTML = oAjax.responseText;</span><br><span class="line">				    &#125; else &#123;</span><br><span class="line">				        console.log(oAjax);</span><br><span class="line">				    &#125;</span><br><span class="line">				&#125;;</span><br><span class="line">		oAjax.send(JSON.stringify(data));</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">	&#125;)</span><br><span class="line"></span><br><span class="line">&lt;/script&gt;</span><br><span class="line"></span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+
+<p><code>这样写的时候，由于html文件的协议是file，所以为了解决跨域问题，需要服务端进行设置</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">const http = require(&apos;http&apos;);</span><br><span class="line"></span><br><span class="line">const server = http.createServer((req,res) =&gt; &#123;</span><br><span class="line">	if(req.url === &apos;/&apos;)&#123;</span><br><span class="line">		res.setHeader(&quot;Access-Control-Allow-Origin&quot;, &quot;*&quot;)</span><br><span class="line">		res.setHeader(&quot;Access-Control-Allow-methods&quot;, &quot;GET, POST, OPTIONS, PUT, DELETE&quot;)</span><br><span class="line">		res.setHeader(&quot;Access-Control-Allow-Headers&quot;,&quot;*&quot;)</span><br><span class="line">		res.setHeader(&quot;Content-type&quot;,&quot;application/plain&quot;)</span><br><span class="line">		res.end(&apos;success!!!&apos;)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">server.listen(8005,() =&gt; &#123;</span><br><span class="line">	console.log(&apos;server listen on http://localhost:8005&apos;)</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p><img src="http://m.qpic.cn/psb?/V13tkHGQ11XQ7I/OH91lACHeRTeJR5tt75a8hMgliVlyjfza8zIypJ*oNY!/b/dL8AAAAAAAAA&bo=1wPSAQAAAAACFzQ!&rf=viewer_4&t=5,http" alt="http"><br><code>这样一次post请求就成功了，来看看浏览器默认包装了什么信息</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Request URL: http://localhost:8005/</span><br><span class="line">Request Method: POST</span><br><span class="line">Status Code: 200 OK</span><br><span class="line">Remote Address: [::1]:8005</span><br><span class="line">//自动使用https协议</span><br><span class="line">Referrer Policy: no-referrer-when-downgrade</span><br><span class="line">Content-type: application/*</span><br><span class="line">Origin: null</span><br><span class="line">User-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36</span><br></pre></td></tr></table></figure>
+
+<p><code>这些信息有的是我们自己在后端写的，有的是浏览器自动添加的</code></p>
+<h2 id="1-2-过程"><a href="#1-2-过程" class="headerlink" title="1.2 过程"></a>1.2 过程</h2><h3 id="1-2-1-整体流程"><a href="#1-2-1-整体流程" class="headerlink" title="1.2.1 整体流程"></a>1.2.1 整体流程</h3><p><code>前面已经知道了浏览器在发起GET或者POST请求的时候会自动的添加的字段，那浏览器在发送请求后到接收到服务端传来的数据前这段时间发生了什么？</code><br><code>网上看到大家的回答大部分都是：</code></p>
+<ul>
+<li>1.接收 URL，并拆分成协议，网络地址，资源路径</li>
+<li>2.与缓存进行比对，如果请求的对象在缓存中，则直接进行第9步</li>
+<li>3.检查域名是否在本地的 host 的文件中，在则直接返回 IP 地址，不在则向 DNS 服务器请求,直到查询到 IP 地址</li>
+<li>4.浏览器向服务器发起一个 TCP 连接</li>
+<li>5.浏览器通过 TCP 连接向服务器发起 HTTP 请求，HTTP 三次握手，HTTPS 握手过程则复杂得多</li>
+<li>6.浏览器接受 HTTP 响应，这时候它能关闭 TCP 连接也能为另一个连接保留。</li>
+<li>7.检查 HTTP header 里的状态码，并做出不同的处理方式。比如：错误（4XX、5XX），重定向（3XX），授权请求（2XX）</li>
+<li>8.如果是可以缓存的，这个响应则会被存储起来</li>
+<li>9.浏览器进行解码响应，并决定如何处理该响应（比如HTML页面，图像，声音等等）</li>
+<li>10.浏览器渲染响应，或者为不能识别的类型提供下载的提示框</li>
+</ul>
+<h3 id="1-2-2-域名解析流程"><a href="#1-2-2-域名解析流程" class="headerlink" title="1.2.2 域名解析流程"></a>1.2.2 域名解析流程</h3><p><code>这样的回答确实把相关的流程说了一遍，但是DNS是如何把域名解析成IP的？这个过程可以被观察到么？三次握手又是什么意思？</code><br><code>为了看到域名解析的过程，我们可以使用Nslookup,它是由微软发布用于对DNS服务器进行检测和排错的命令行工具</code><br><code>比如可以看一下，https://www.baidu.com它的IP是什么，nslookup https://www.baidu.com</code><br><code>我在查看的时候一直报延时错误，只好从网上引用一张图来说明一下了</code><br><img src="http://m.qpic.cn/psb?/V13tkHGQ11XQ7I/cbeLBdaeHmA2ba9xL9ixqVRJjBX9A9DXwCpFvHoWRC4!/b/dL4AAAAAAAAA&bo=3QL2AAAAAAADFxs!&rf=viewer_4&t=5" alt="nslookup"><br><code>其中server代表本地地址ip，下面那个address是百度的ip</code><br><code>通过这样的方式就能看到具体域名解析的过程</code></p>
+<h3 id="1-2-3-三次握手流程"><a href="#1-2-3-三次握手流程" class="headerlink" title="1.2.3 三次握手流程"></a>1.2.3 三次握手流程</h3><p><code>接下来是三次握手，当域名转化成IP后，浏览器沿着ip找到服务器，进行三次握手：</code></p>
+<ul>
+<li>第一次握手：客户端的应用进程主动打开，并向客户端发出请求报文段。其首部中：SYN=1,seq=x。</li>
+<li>第二次握手：服务器应用进程被动打开。若同意客户端的请求，则发回确认报文，其首部中：SYN=1,ACK=1,ack=x+1,seq=y</li>
+<li>第三次握手：客户端收到确认报文之后，通知上层应用进程连接已建立，并向服务器发出确认报文，其首部：ACK=1,ack=y+1。当服务器收到客户端的确认报文之后，也通知其上层应用进程连接已建立<br><img src="http://m.qpic.cn/psb?/V13tkHGQ11XQ7I/lwjPP8dOrp1xgn27GWSZhmx6eH85LTZjaO8V529Qbew!/b/dL8AAAAAAAAA&bo=9AEsAQAAAAARF*g!&rf=viewer_4&t=5" alt="hand"><br><code>看到这里，有个问题，前两次握手已经把客户端和服务端联系在一起了，那为什么还要第三次握手？</code></li>
+</ul>
+<blockquote>
+<p>如果是两次握手，当A想要建立连接时发送一个SYN，然后等待ACK，结果这个SYN因为网络问题没有及时到达B，所以A在一段时间内没收到ACK后，在发送一个SYN，B也成功收到，然后A也收到ACK，这时A发送的第一个SYN终于到了B，对于B来说这是一个新连接请求，然后B又为这个连接申请资源，返回ACK，然而这个SYN是个无效的请求，A收到这个SYN的ACK后也并不会理会它，而B却不知道，B会一直为这个连接维持着资源，造成资源的浪费,但如果是三次握手，如果第三次握手迟迟不来，服务器便会认为这个SYN是无效的，释放相关资源</p>
+</blockquote>
+<h2 id="1-3-响应"><a href="#1-3-响应" class="headerlink" title="1.3 响应"></a>1.3 响应</h2><p><code>成功发起请求并完整走完了上述流程，浏览器能获得服务器发来的数据，那这些数据被放在哪里，它是如何被浏览器处理的？</code><br><code>其实这个问题很简单，在前面成功发起http请求后，服务端会有一个响应,这里面规定了各种文件格式</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Access-Control-Allow-Headers: *</span><br><span class="line">Access-Control-Allow-methods: GET, POST, OPTIONS, PUT, DELETE</span><br><span class="line">Access-Control-Allow-Origin: *</span><br><span class="line">Connection: keep-alive</span><br><span class="line">Content-Length: 10</span><br><span class="line">Content-type: application/plain</span><br><span class="line">Date: Wed, 08 May 2019 07:12:14 GMT</span><br></pre></td></tr></table></figure>
+
+<h1 id="2-渲染"><a href="#2-渲染" class="headerlink" title="2.渲染"></a>2.渲染</h1><h2 id="2-1-整体流程"><a href="#2-1-整体流程" class="headerlink" title="2.1 整体流程"></a>2.1 整体流程</h2><p><code>数据请求回来以后，浏览器是如何把数据转化成页面的呢?这个过程就涉及到了DOM树，CSSOM树，render树的生成和页面的绘制，先来贴图看看整体流程：</code><br><img src="http://m.qpic.cn/psb?/V13tkHGQ11XQ7I/XjYKKce6e467pyL4N*naTai.FyFPkUHDJUOiY5GdcBk!/b/dD4BAAAAAAAA&bo=zQMUAgAAAAADF.o!&rf=viewer_4&t=5" alt="a"><br><code>在构建DOM树的时候，遇到 js 和 CSS元素，HTML解析器就换将控制权转让给JS解析器或者是CSS解析器。开始构建CSSOM,在构建CSSOM树的时候，解析是从右向左进行的，DOM树构建完之后和CSSOM合成一棵render tree</code><br><code>有了Render Tree，浏览器已经能知道网页中有哪些节点、各个节点的CSS定义以及他们的从属关系。下一步操作称之为Layout，顾名思义就是计算出每个节点在屏幕中的位置</code><br><code>Layout后，浏览器已经知道了哪些节点要显示（which nodes are visible）、每个节点的CSS属性是什么（their computed styles）、每个节点在屏幕中的位置是哪里（geometry）。就进入了最后一步：Painting，按照算出来的规则，通过显卡，把内容画到屏幕上，HTML默认是流式布局的，CSS和js会打破这种布局，改变DOM的外观样式以及大小和位置，当尺寸改变时会reflow，也就是重新绘制，比如table布局整体尺寸改变，页面就需要重绘，但当非尺寸改变时，会进行replaint</code></p>
+<blockquote>
+<p><code>通过这个分析知道了DOM树的生成过程中可能会被CSS和JS的加载执行阻塞，所以平时写CSS时，尽量用id和class，千万不要过渡层叠，尽量减少会造成reflow的操作，把JS代码放到页面底部，且JavaScript 应尽量少影响 DOM 的构建</code></p>
+</blockquote>
+<h2 id="2-2-底层源码"><a href="#2-2-底层源码" class="headerlink" title="2.2 底层源码"></a>2.2 底层源码</h2><p><code>这样说一遍，还是在很表面的层次在说渲染这件事，那有没有更深层次的理解呢？可以通过看浏览器源码来进行分析：</code><br><code>大致分为三个步骤：</code></p>
+<ul>
+<li><code>1.HTMLDocumentParser负责解析html文本为tokens</code></li>
+<li><code>2.HTMLTreeBuilder对这些tokens分类处理</code></li>
+<li><code>3.HTMLConstructionSite调用不同的函数构建DOM树</code></li>
+</ul>
+<p><img src="http://m.qpic.cn/psb?/V13tkHGQ11XQ7I/jI*cfhOcPUMnYZadkTY78F1pbSv1ZNubitaXA98yv3k!/b/dMAAAAAAAAAA&bo=0ALWAQAAAAADFzc!&rf=viewer_4&t=5" alt="parser"><br><code>接下来使用这个html文档来说明DOM树的构建过程：</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">    &lt;meta charset=&quot;utf-8&quot;&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">    &lt;div&gt;</span><br><span class="line">        &lt;h1 class=&quot;title&quot;&gt;demo&lt;/h1&gt;</span><br><span class="line">        &lt;input value=&quot;hello&quot;&gt;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-2-1生成tokens"><a href="#2-2-1生成tokens" class="headerlink" title="2.2.1生成tokens"></a>2.2.1生成tokens</h3><p><code>首先是&gt;&gt;&gt;HTMLDocumentParser负责解析html文本为tokens</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">void DocumentLoader::commitData(const char* bytes, size_t length) &#123;</span><br><span class="line">  ensureWriter(m_response.mimeType());</span><br><span class="line">  if (length)</span><br><span class="line">    m_dataReceived = true;</span><br><span class="line">  m_writer-&gt;addData(bytes, length);//内部调用HTMLDocumentParser</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>构建出来的token是包含页面元素的信息表:</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">tagName: html  |type: DOCTYPE   |attr:              |text: &quot;</span><br><span class="line">tagName:       |type: Character |attr:              |text: \n&quot;</span><br><span class="line">tagName: html  |type: startTag  |attr:              |text: &quot;</span><br><span class="line">tagName:       |type: Character |attr:              |text: \n&quot;</span><br><span class="line">tagName: head  |type: startTag  |attr:              |text: &quot;</span><br><span class="line">tagName:       |type: Character |attr:              |text: \n    &quot;</span><br><span class="line">tagName: meta  |type: startTag  |attr:charset=utf-8 |text: &quot;</span><br><span class="line">tagName:       |type: Character |attr:              |text: \n&quot;</span><br><span class="line">tagName: head  |type: EndTag    |attr:              |text: &quot;</span><br><span class="line">tagName:       |type: Character |attr:              |text: \n&quot;</span><br><span class="line">tagName: body  |type: startTag  |attr:              |text: &quot;</span><br><span class="line">tagName:       |type: Character |attr:              |text: \n    &quot;</span><br><span class="line">tagName: div   |type: startTag  |attr:              |text: &quot;</span><br><span class="line">tagName:       |type: Character |attr:              |text: \n        &quot;</span><br><span class="line">tagName: h1    |type: startTag  |attr:class=title   |text: &quot;</span><br><span class="line">tagName:       |type: Character |attr:              |text: demo&quot;</span><br><span class="line">tagName: h1    |type: EndTag    |attr:              |text: &quot;</span><br><span class="line">tagName:       |type: Character |attr:              |text: \n        &quot;</span><br><span class="line">tagName: input |type: startTag  |attr:value=hello   |text: &quot;</span><br><span class="line">tagName:       |type: Character |attr:              |text: \n    &quot;</span><br><span class="line">tagName: div   |type: EndTag    |attr:              |text: &quot;</span><br><span class="line">tagName:       |type: Character |attr:              |text:     \n&quot;</span><br><span class="line">tagName: body  |type: EndTag    |attr:              |text: &quot;</span><br><span class="line">tagName:       |type: Character |attr:              |text: \n&quot;</span><br><span class="line">tagName: html  |type: EndTag    |attr:              |text: &quot;</span><br><span class="line">tagName:       |type: Character |attr:              |text: \n&quot;</span><br><span class="line">tagName:       |type: EndOfFile |attr:              |text: &quot;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-2-2tokens分类"><a href="#2-2-2tokens分类" class="headerlink" title="2.2.2tokens分类"></a>2.2.2tokens分类</h3><p><code>接着是&gt;&gt;&gt;&gt;&gt;HTMLTreeBuilder对这些tokens分类处理</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">void HTMLTreeBuilder::processToken(AtomicHTMLToken* token) &#123;</span><br><span class="line">  if (token-&gt;type() == HTMLToken::Character) &#123;</span><br><span class="line">    processCharacter(token);</span><br><span class="line">    return;</span><br><span class="line">  &#125;</span><br><span class="line"> </span><br><span class="line">  switch (token-&gt;type()) &#123;</span><br><span class="line">    case HTMLToken::DOCTYPE:</span><br><span class="line">      processDoctypeToken(token);</span><br><span class="line">      break;</span><br><span class="line">    case HTMLToken::StartTag:</span><br><span class="line">      processStartTag(token);</span><br><span class="line">      break;</span><br><span class="line">    case HTMLToken::EndTag:</span><br><span class="line">      processEndTag(token);</span><br><span class="line">      break;</span><br><span class="line">    //othercode</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-2-3-构建DOM树"><a href="#2-2-3-构建DOM树" class="headerlink" title="2.2.3 构建DOM树"></a>2.2.3 构建DOM树</h3><p><code>最后，最关键的就是HTMLConstructionSite调用不同的函数构建DOM树，它根据不同的节点类型进行不同的处理</code></p>
+<h4 id="1-DOCTYPE的处理"><a href="#1-DOCTYPE的处理" class="headerlink" title="1.DOCTYPE的处理"></a>1.DOCTYPE的处理</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// tagName不是html，那么文档类型将会是怪异模式</span><br><span class="line"> if (name != &quot;html&quot; ) &#123;</span><br><span class="line">   setCompatibilityMode(Document::QuirksMode);</span><br><span class="line">   return;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">// html4写法,文档类型是有限怪异模式</span><br><span class="line"> if (!systemId.isEmpty() &amp;&amp;</span><br><span class="line">      publicId.startsWith(&quot;-//W3C//DTD HTML 4.01 Transitional//&quot;,</span><br><span class="line">                          TextCaseASCIIInsensitive))) &#123;</span><br><span class="line">   setCompatibilityMode(Document::LimitedQuirksMode);</span><br><span class="line">   return;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// h5的写法，标准模式</span><br><span class="line">setCompatibilityMode(Document::NoQuirksMode);</span><br></pre></td></tr></table></figure>
+
+<p><code>不同的模式会造成什么影响？</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">// There are three possible compatibility modes:</span><br><span class="line">// Quirks - quirks mode emulates WinIE and NS4. CSS parsing is also relaxed in</span><br><span class="line">// this mode, e.g., unit types can be omitted from numbers.</span><br><span class="line">// Limited Quirks - This mode is identical to no-quirks mode except for its</span><br><span class="line">// treatment of line-height in the inline box model.</span><br><span class="line">// No Quirks - no quirks apply. Web pages will obey the specifications to the</span><br><span class="line">// letter.</span><br><span class="line">//怪异模式会模拟IE，同时CSS解析会比较宽松，例如数字单位可以省略，</span><br><span class="line">//有限怪异模式和标准模式的唯一区别在于在于对inline元素的行高处理不一样</span><br><span class="line">//标准模式将会让页面遵守文档规定</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-开标签的处理"><a href="#2-开标签的处理" class="headerlink" title="2.开标签的处理"></a>2.开标签的处理</h4><p><code>首先是&lt;html&gt;标签，处理这个标签的任务应该是实例化一个HTMLHtmlElement元素，然后把它的父元素指向document</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">HTMLConstructionSite::HTMLConstructionSite(</span><br><span class="line">    Document&amp; document)</span><br><span class="line">    : m_document(&amp;document),</span><br><span class="line">      m_attachmentRoot(document)) &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">void HTMLConstructionSite::insertHTMLHtmlStartTagBeforeHTML(AtomicHTMLToken* token) &#123;</span><br><span class="line">  HTMLHtmlElement* element = HTMLHtmlElement::create(*m_document);//创建一个html结点</span><br><span class="line">  attachLater(m_attachmentRoot, element);//加到一个任务队列里面</span><br><span class="line">  m_openElements.pushHTMLHtmlElement(HTMLStackItem::create(element, token));//压到一个栈里面，这个栈存放了未遇到闭标签的所有开标签</span><br><span class="line">  executeQueuedTasks();//执行队列里面的任务</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">//建立一个task</span><br><span class="line">void HTMLConstructionSite::attachLater(ContainerNode* parent,Node* child, bool selfClosing) &#123;</span><br><span class="line">  HTMLConstructionSiteTask task(HTMLConstructionSiteTask::Insert);</span><br><span class="line">  task.parent = parent;</span><br><span class="line">  task.child = child;</span><br><span class="line">  task.selfClosing = selfClosing;</span><br><span class="line"> </span><br><span class="line">  // Add as a sibling of the parent if we have reached the maximum depth</span><br><span class="line">  // allowed.</span><br><span class="line">  if (m_openElements.stackDepth() &gt; maximumHTMLParserDOMTreeDepth &amp;&amp;</span><br><span class="line">      task.parent-&gt;parentNode())</span><br><span class="line">    task.parent = task.parent-&gt;parentNode();</span><br><span class="line"> </span><br><span class="line">  queueTask(task);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">//executeQueuedTasks根据task的类型执行不同的操作</span><br><span class="line">void ContainerNode::parserAppendChild(Node* newChild) &#123;</span><br><span class="line">  if (!checkParserAcceptChild(*newChild))</span><br><span class="line">    return;</span><br><span class="line">    AdoptAndAppendChild()(*this, *newChild, nullptr);</span><br><span class="line">  &#125;</span><br><span class="line">  notifyNodeInserted(*newChild, ChildrenChangeSourceParser);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">//建立起html结点的父子兄弟关系</span><br><span class="line">void ContainerNode::appendChildCommon(Node&amp; child) &#123;</span><br><span class="line">  child.setParentOrShadowHostNode(this);//设置子元素的父结点，也就是会把html结点的父结点指向document</span><br><span class="line">  if (m_lastChild) &#123;</span><br><span class="line">  //子元素的previousSibling指向老的lastChild，老的lastChild的nexSibling指向它</span><br><span class="line">    child.setPreviousSibling(m_lastChild);</span><br><span class="line">    m_lastChild-&gt;setNextSibling(&amp;child);</span><br><span class="line">  &#125; else &#123;</span><br><span class="line">  	//如果没有lastChild，会将这个子元素作为firstChild</span><br><span class="line">    setFirstChild(&amp;child);</span><br><span class="line">  &#125;</span><br><span class="line">  //子元素设置为当前ContainerNode（即document）的lastChild</span><br><span class="line">  setLastChild(&amp;child);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>每当遇到一个开标签时，就把它压起来，下一次再遇到一个开标签时，它的父元素就是上一个开标签,借助一个栈建立起了父子关系</code></p>
+<h4 id="3-闭标签的处理"><a href="#3-闭标签的处理" class="headerlink" title="3.闭标签的处理"></a>3.闭标签的处理</h4><p><code>第一个闭标签是head标签，它会把开的head标签pop出来，栈里面就剩下html元素了，所以当再遇到body时，html元素就是body的父元素了</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">m_tree.openElements()-&gt;popUntilPopped(token-&gt;name());</span><br></pre></td></tr></table></figure>
+
+<div style="text-align:center;margin:30px;font-size:20px;border-radius:5px;border:3px solid #eee; cursor:pointer;" onclick="javascript:window.scrollTo(0, 0)">TOP</div>
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title='0' data-url='http://link.hhtjim.com/163/5146554.mp3'></li>
+                        
+                    
+                        
+                            <li title='1' data-url='http://link.hhtjim.com/qq/001faIUs4M2zna.mp3'></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/diaspora.js"></script>
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+</html>
