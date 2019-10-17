@@ -1,0 +1,430 @@
+
+<!DOCTYPE html>
+<html lang="en" class="loading">
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Node深入理解 - GYK</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate">
+    <meta name="keywords" content="node,"> 
+    <meta name="description" content="Lonely&#39;s blog,BOTTOM
+
+Node1.特性介绍要想了解一样事物，首先要学习它的历史，知道它的演进历史，才能知道它的各部分组成是如何来的，学习node也一样，有的人一上来就直接学习它的各种模块，按照文档的顺序逐,"> 
+    <meta name="author" content="kk"> 
+    <link rel="alternative" href="atom.xml" title="GYK" type="application/atom+xml"> 
+    
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+    <link rel="stylesheet" href="/css/diaspora.css">
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+              google_ad_client: "ca-pub-8691406134231910",
+              enable_page_level_ads: true
+         });
+    </script>
+    <script async custom-element="amp-auto-ads" src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+    </script>
+</head>
+</html>
+<body class="loading">
+    <span id="config-title" style="display:none">GYK</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="icon-home image-icon" href="javascript:;" data-url="https://gaoyakang.github.io"></a>
+    <div title="播放/暂停" class="icon-play"></div>
+    <h3 class="subtitle">Node深入理解</h3>
+    <div class="social">
+        <!--<div class="like-icon">-->
+            <!--<a href="javascript:;" class="likeThis active"><span class="icon-like"></span><span class="count">76</span></a>-->
+        <!--</div>-->
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">Node深入理解</h1>
+        <div class="stuff">
+            <span>一月 22, 2019</span>
+            
+
+        </div>
+        <div class="content markdown">
+            <div style="text-align:center;margin:30px;font-size:20px;border-radius:5px;border:3px solid #eee; cursor:pointer;" onclick="javascript:window.scrollTo(0, document.body.clientHeight)">BOTTOM</div>
+
+<h1 id="Node"><a href="#Node" class="headerlink" title="Node"></a>Node</h1><h2 id="1-特性介绍"><a href="#1-特性介绍" class="headerlink" title="1.特性介绍"></a>1.特性介绍</h2><p><code>要想了解一样事物，首先要学习它的历史，知道它的演进历史，才能知道它的各部分组成是如何来的，学习node也一样，有的人一上来就直接学习它的各种模块，按照文档的顺序逐个阅读，这会给新手造成极大的困惑，并不知道各部分之间有什么联系，为什么要出现这种模块，只去记忆各种api的用法永远不能知道它背后的原理; 还有的人匆匆看过一遍文档，囫囵吞枣，就赶快去学习现在已有的各种框架，如express，koa，egg等，但使用了很长时间，各种服务器基本功能确实能很快的实现，但是他并不知道背后的原理，大量的内容被封装，永远无法深入到内部核心，也无法知道node除了服务器功能外，其实是一个基础性的框架，能做什么取决于自己的想象力，所以学习node我们应该从学node本身的特性开始，不应该是直接看文档，一个个的记忆模块api，也不应该去直接用框架，丢掉了学习底层原理的机会</code></p>
+<p><code>要从node本身的特性学习，就要了解node的基本历史</code></p>
+<ul>
+<li><p>2009年RyanDahl利用chromeV8引擎创造了nodejs</p>
+</li>
+<li><p>2012年IsaacZSchlueter接管了node的版本迭代和bug修复</p>
+</li>
+</ul>
+<p><code>RyanDahl最初是一个c++程序员，他的工作就是要创造一个高性能的web服务器，他发现当时的服务器性能低下的主要原因是大家都通过多进程的方式来响应用户请求，每个请求对应一个进程，这带来的问题是机器本身能启用的进程是有限的，当高并发来临时，进程不够用，请求就只能等待了，所以他就创造了另一个模型，只开一个进程，该进程就用于分配请求，至于处理实际请求就交给node底层来做，cpu在分配请求时理论上是可以做到永不停息的，至于处理的结果，那就依赖底层处理的速度，这整体是基于事件驱动的，非阻塞的模型 ，这也成为了node后来的主要特性，那为什么他要选用javascript来作为node的开发语言呢？</code></p>
+<ul>
+<li><p>1.js在后端的应用很少，没有历史包袱</p>
+</li>
+<li><p>2.js是典型的基于事件驱动的编程语言</p>
+</li>
+<li><p>3.chromeV8引擎将会为node提供强大动力</p>
+</li>
+</ul>
+<p><code>随着node项目的开发，RyanDahl发现他所作的事已经远远超过了做一个服务器的功能，于是这个项目的转变成了一个基础性的框架项目，用它你不仅仅能实现一个web服务器，还可以用它来开发命令行工具，构建客户端程序，处理高并发或者实时IO的场景，要创造什么取决于你的想象力，它核心的竞争力是基于事件驱动的非阻塞IO，这是什么意思呢？它的关键有2点：</code></p>
+<ul>
+<li><p>1.非阻塞IO</p>
+</li>
+<li><p>2.基于事件驱动</p>
+</li>
+</ul>
+<p><code>还是以服务器开发为例进行讲解，作为服务器，最常见的操作是处理IO请求，一个高性能的服务器必然不允许这些常见的操作耗费大量的时间，于是RyanDahl在node底层封装了大量的异步IO的API，这些异步化的api在获得操作的结果时会以事件的方式进行返回，这样这些操作不必等待操作结果而能继续执行剩余的操作，它所消耗的时间不再是所有操作耗费时间的总和，而变成了这些操作中最慢结果返回的时间，这不仅极大的节省了时间，还与前端的基于事件编程的体验一致，与此同时，node保持了javascript的单线程模型，这虽然避免了多线程编程带来的同步以及锁问题，但会导致其他的问题</code></p>
+<ul>
+<li><p>1.无法使用多核cpu，当单核cpu被大量占据时异步IO无法调用</p>
+</li>
+<li><p>2.整个程序处于单线程，有错误时很容易崩溃</p>
+</li>
+</ul>
+<p><code>针对这两个问题，node提出了解决方案</code></p>
+<ul>
+<li><p>1.node原生实现了child_process来提供创建多线程的能力，但要记得这里创建多线程并不是要处理并发问题，因为并发问题在node底层通过异步IO已经实现，它要解决的是主线程被CPU密集操作占据了以后异步IO无法调用的问题</p>
+</li>
+<li><p>2.现在异步化的解决方案中，promise和async/await都有完整的错误处理机制</p>
+</li>
+</ul>
+<p><code>node最开始只支持在linux平台运行，后来微软联合RyanDahl利用libuv库实现了迁移，说完了node的最大优势，那node主要用于那些方面呢?</code></p>
+<ul>
+<li>1.IO密集操作场景</li>
+</ul>
+<p><code>有很多人对node有误解，提出了node一统前后端会不会对其他语言造成冲击</code></p>
+<p><code>其实这样想的人并不了解node，它是个基础性的框架，Web服务器是重点模块但不是唯一模块，有很多比node出现的早的系统已经有了很好的web解决方案，未来的趋势是这些稳定的系统很有可能成为数据源而非服务器，可以将node作为中间层，合理的利用它的高并发的能力，现在不同的人对node关注点不一样</code></p>
+<ul>
+<li><p>1.node统一前后端</p>
+</li>
+<li><p>2.node实时IO</p>
+</li>
+<li><p>3.node并发IO</p>
+</li>
+<li><p>4.游戏领域</p>
+</li>
+<li><p>5.工具领域</p>
+</li>
+</ul>
+<p><code>node遍地开花，所以选择node开发是很有远见的选择</code></p>
+<h2 id="2-模块化"><a href="#2-模块化" class="headerlink" title="2.模块化"></a>2.模块化</h2><h3 id="2-1-模块基础"><a href="#2-1-模块基础" class="headerlink" title="2.1 模块基础"></a>2.1 模块基础</h3><p><code>前面说完了node的优势，接下来说它的模块化，我们知道在前端是有属于自己的的ECMA基础语法规范和w3c的DOM/BOM标准的，但在后端除了由于使用js作为开发语言，我们可以使用ECMA的规范外，后端的js其实并没有其他的规范，为了让node支持编写大型应用，首先要做的就是要拆分逻辑，合理的组织代码，所以commonjs应需求出现，要学node,除了要知道它的异步优势，第一个应该学习的就是它的模块化，模块对象直接挂载在global上，global就相当于我们在浏览器的window对象</code></p>
+<p><code>在node中，一个文件就是一个模块，模块分为：</code></p>
+<ul>
+<li><p>1.内置模块</p>
+</li>
+<li><p>2.自编模块</p>
+</li>
+<li><p>3.第三方模块</p>
+</li>
+</ul>
+<p><code>模块的导入导出的语法非常简单，但是它的底层并不简单</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">导入：require（）</span><br><span class="line"></span><br><span class="line">导出：module.exports</span><br></pre></td></tr></table></figure>
+
+<p><code>这个module代表的就是模块本身，接下来通过一系列的提问把模块相关的知识串联起来</code></p>
+<ul>
+<li><code>1.在平时使用中我们并没有引入这些语法，但他们却能直接使用，这是为什么呢？</code></li>
+</ul>
+<p><code>node在进程启动时就会将内置模块直接加载在内存中方便大家的调用，当使用导入导出模块时，在编译的过程中会实现对module,exports,require等用模块封装器进行包装，所以在使用时并不需要直接的引入，</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">(function(exports, require, module, __filename, __dirname) &#123; // 模块的代码实际上在这里 &#125;);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>2.node的内置模块是直接加载在内存中的，那其他模块时怎样被识别到的呢？</code></li>
+</ul>
+<p><code>对于自编模块和第三方模块，他们都是通过路径进行动态加载的，一旦加载成功就会在node中留有缓存，下次使用时会优先考虑缓存，所以在node中模块的加速优先级是：</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">缓存 &gt; 内置 &gt; 自编 &gt; 第三方</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>3.都是通过路径动态加载，为什么自编模块会比第三方模块加载的速度快呢？</code></li>
+</ul>
+<p><code>这是由于自编块会直接获得对应的绝对地址的路径，而第三方模块需要一次次获取模块路径，如果第三方模块还引用了其他的模块，那加载速度还会更慢</code></p>
+<ul>
+<li><code>4.为什么在写模块时并没有写后缀但还是能找到该模块</code></li>
+</ul>
+<p><code>因为它的文件模块会自动的寻找js,json,node结尾的文件或将其他类型的文件转为js文件，如果加载的时候都不匹配就会直接返回错误，接下来验证一下</code></p>
+<p><code>验证一下</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">1.node的模块语法是直接加载在内存中的</span><br><span class="line"></span><br><span class="line">console.log(module)</span><br><span class="line"></span><br><span class="line">2.加载成功的模块会形成缓存</span><br><span class="line"></span><br><span class="line">console.log(&apos;===============module1==============&apos;)</span><br><span class="line"></span><br><span class="line">require(&apos;./1.2module2&apos;)</span><br><span class="line"></span><br><span class="line">require(&apos;./1.2module2&apos;)</span><br><span class="line"></span><br><span class="line">console.log(require.cache)</span><br><span class="line"></span><br><span class="line">console.log(&apos;===============module2==============&apos;)</span><br><span class="line"></span><br><span class="line">3.缓存 &gt; 内置 &gt; 自编 &gt; 第三方</span><br><span class="line"></span><br><span class="line">4.node加载模块时并不需要写具体的后缀</span><br><span class="line"></span><br><span class="line">console.log(require)</span><br></pre></td></tr></table></figure>
+
+<p><code>再来验证缓存 &gt; 内置 &gt; 自编 &gt; 第三方</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">console.log(&apos;===============module1==============&apos;)</span><br><span class="line"></span><br><span class="line">let a = Date.now()</span><br><span class="line"></span><br><span class="line">require(&apos;./1.2module2&apos;)</span><br><span class="line"></span><br><span class="line">let b = Date.now()</span><br><span class="line"></span><br><span class="line">console.log(&apos;加载自编模块耗费:&apos;,b-a)</span><br><span class="line"></span><br><span class="line">let c = Date.now()</span><br><span class="line"></span><br><span class="line">require(&apos;./1.2module2&apos;)</span><br><span class="line"></span><br><span class="line">let d = Date.now()</span><br><span class="line"></span><br><span class="line">console.log(&apos;加载缓存模块耗费:&apos;,d-c)</span><br><span class="line"></span><br><span class="line">let e = Date.now()</span><br><span class="line"></span><br><span class="line">const fs = require(&apos;fs&apos;)</span><br><span class="line"></span><br><span class="line">let f = Date.now()</span><br><span class="line"></span><br><span class="line">console.log(&apos;加载内置模块耗费:&apos;,f-e)</span><br><span class="line"></span><br><span class="line">let g = Date.now()</span><br><span class="line"></span><br><span class="line">const $ = require(&apos;jquery&apos;)</span><br><span class="line"></span><br><span class="line">let h = Date.now()</span><br><span class="line"></span><br><span class="line">console.log(&apos;加载第三方模块耗费:&apos;,h-g)</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-2-模块管理"><a href="#2-2-模块管理" class="headerlink" title="2.2 模块管理"></a>2.2 模块管理</h3><p><code>前面说过了module中需要注意的事情，接下来说和module息息相关的npm，它是由IsaacZSchlueter开发的符合commonjs包规范的包管理工具，当我们需要使用第三方的模块时，只需要下载即可</code><br><code>commonjs的包规范包括2部分：</code></p>
+<ul>
+<li><p>1.包结构：实际的模块内容，在存档时会被压缩，下载时被解压</p>
+</li>
+<li><p>2.包描述文件：package.json，包含了封装的模块的所有信息</p>
+</li>
+</ul>
+<p><code></code>包结构`</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">1.一个package.json文件应该存在于包顶级目录下</span><br><span class="line"></span><br><span class="line">2.二进制文件应该包含在bin目录下</span><br><span class="line"></span><br><span class="line">3.JavaScript代码应该包含在lib目录下。</span><br><span class="line"></span><br><span class="line">4.文档应该在doc目录下。</span><br><span class="line"></span><br><span class="line">5.单元测试应该在test目录下。</span><br><span class="line"></span><br><span class="line">我们可以去看看一个规范的包应该是怎么样的</span><br><span class="line"></span><br><span class="line">D:\software\nodejs\node_modules\npm</span><br></pre></td></tr></table></figure>
+
+<p><code>包描述文件</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">https://www.npmjs.cn/getting-started/using-a-package.json/</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line"></span><br><span class="line">  &quot;name&quot;: &quot;node&quot;,</span><br><span class="line"></span><br><span class="line">  &quot;version&quot;: &quot;1.0.0&quot;,</span><br><span class="line"></span><br><span class="line">  &quot;description&quot;: &quot;&quot;,</span><br><span class="line"></span><br><span class="line">  &quot;main&quot;: &quot;index.js&quot;,</span><br><span class="line"></span><br><span class="line">  &quot;scripts&quot;: &#123;</span><br><span class="line"></span><br><span class="line">    &quot;test&quot;: &quot;echo \&quot;Error: no test specified\&quot; &amp;&amp; exit 1&quot;</span><br><span class="line"></span><br><span class="line">  &#125;,</span><br><span class="line"></span><br><span class="line">  &quot;keywords&quot;: [],</span><br><span class="line"></span><br><span class="line">  &quot;author&quot;: &quot;&quot;,</span><br><span class="line"></span><br><span class="line">  &quot;license&quot;: &quot;ISC&quot;,</span><br><span class="line"></span><br><span class="line">  &quot;dependencies&quot;: &#123;</span><br><span class="line"></span><br><span class="line">    &quot;jquery&quot;: &quot;^3.4.1&quot;</span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>说完了npm的结构，那它是如何使用的呢？</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line">在下载node的时候，npm就被捆绑下载了，接下来通过一次发包带大家了解npm的使用</span><br><span class="line"></span><br><span class="line">1.npm init</span><br><span class="line"></span><br><span class="line">2.#! /usr/bin/env node</span><br><span class="line"></span><br><span class="line">3.&quot;bin&quot;: &#123;</span><br><span class="line"></span><br><span class="line">    &quot;51zxw&quot;: &quot;index.js&quot;</span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">4.申请账号,npm login</span><br><span class="line"></span><br><span class="line">5.npm publish</span><br><span class="line"></span><br><span class="line">6.npm i 51zxw并使用</span><br><span class="line"></span><br><span class="line">7.npm unpublish —force</span><br><span class="line"></span><br><span class="line">commonjs的出现，形成了node的骨架，扩展了node的结构性，奠定了node编写大型应用的基础</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-事件驱动-非阻塞原理"><a href="#3-事件驱动-非阻塞原理" class="headerlink" title="3.事件驱动/非阻塞原理"></a>3.事件驱动/非阻塞原理</h2><h3 id="3-1-事件驱动原理"><a href="#3-1-事件驱动原理" class="headerlink" title="3.1 事件驱动原理"></a>3.1 事件驱动原理</h3><p><code>要想深入的理解node的事件驱动/非阻塞原理，首先要区分清楚几个概念</code></p>
+<ul>
+<li><p>1.阻塞：卡住了</p>
+</li>
+<li><p>2.非阻塞：没卡住</p>
+</li>
+<li><p>3.同步：连续完成</p>
+</li>
+<li><p>4.异步：间断完成</p>
+</li>
+</ul>
+<p><code>这里我们不去说它的概念，因为根本不实用，只要按以上的标准进行区分即可，同时还要知道阻塞和同步，非阻塞和异步并没有必然联系，理解了以上的概念，接着我们就能接着来思考既然同步非阻塞和异步非阻塞都能获得结果，为什么要选择异步非阻塞呢？</code></p>
+<p><code>这是因为js是单线程的语言，同步非阻塞意味着代码一步步执行，没有结果就等待结果，异步非阻塞则可以在没有结果的时候继续执行下一步，等有了结果再来处理结果，所以在node中选择了异步io来实现非阻塞模型</code></p>
+<p><code>那node是如何实现的呢？</code></p>
+<p><code>在其他语言中，要实现非阻塞模型就需要通过在语言层面上开启多进程，管理进程间的交互，合理分配需求到进程中，在node中用js编写代码时根本不需要手动创建进程管理，它只会在主线程中识别到异步代码时，将操作名与回调推入任务队列，任务队列中进一步区分异步类型，有的会推进底层线程池，有的继续待在任务队列，去往线程池的任务此时不必等待线程将任务执行完毕就能返回继续执行剩余的操作，这意味着进程的创建与维护是交由底层系统来实现的，js层面上只需要调用底层写好的异步化的API就能实现非阻塞的模型，最后当底层的线程池中的线程空闲后就能执行任务返回结果</code></p>
+<p><code>那在这个过程里它是如何识别异步代码并进行推入或接受最后结果的呢?</code></p>
+<p><code>这个涉及到node的事件驱动，所谓的事件驱动指的是程序的执行顺序通过事件来决定，事件本身是被事件处理器或事件回调来处理，当我们调用常用的网络模块(net,dram,http…)，文件读取模块(fs)等的api建立对象进行操作时，这些对象就可以进行事件的注册，监听等，这是由于node中绝大多数的模块都继承了events模块中的EventEmitter类，它是一个基于观察者模式实现的类，它定义了对象之间的一对多的依赖，当它发生改变时(比如参数变化，结果响应)，它的所有的依赖都会收到通知自动更新，先来使用一下EventEmitter类，感受一下它的功能，然后我们可以自己实现一下，了解一下它的底层原理</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">const EventEmitter = require(&apos;events&apos;)</span><br><span class="line"></span><br><span class="line">class MyEmitter extends EventEmitter &#123;&#125;</span><br><span class="line"></span><br><span class="line">const myEmitter = new MyEmitter()</span><br><span class="line"></span><br><span class="line">//===================11111111111============================</span><br><span class="line"></span><br><span class="line">//多个绑定同时响应对象的变化并自动更新</span><br><span class="line">// 监听事件</span><br><span class="line">// myEmitter.on(&apos;event&apos;, (param) =&gt; &#123;</span><br><span class="line">//   console.log(param)</span><br><span class="line">// &#125;)</span><br><span class="line">// myEmitter.on(&apos;event&apos;, (param) =&gt; &#123;</span><br><span class="line">//   console.log(param)</span><br><span class="line">// &#125;)</span><br><span class="line"></span><br><span class="line">// // //触发事件</span><br><span class="line">// myEmitter.emit(&apos;event&apos;,&apos;51zxw&apos;)</span><br><span class="line">// myEmitter.emit(&apos;event&apos;,&apos;我要自学网&apos;)</span><br><span class="line"></span><br><span class="line">//======================22222222222=========================</span><br><span class="line">// 同一对象绑定多个事件</span><br><span class="line">// 监听事件</span><br><span class="line">// myEmitter.on(&apos;event&apos;, (param) =&gt; &#123;</span><br><span class="line">//   console.log(param)</span><br><span class="line">// &#125;)</span><br><span class="line">// myEmitter.on(&apos;error&apos;, (err) =&gt; &#123;</span><br><span class="line">//   console.log(err)</span><br><span class="line">// &#125;)</span><br><span class="line"></span><br><span class="line">// // //触发事件</span><br><span class="line">// myEmitter.emit(&apos;event&apos;,&apos;51zxw&apos;)</span><br><span class="line">// myEmitter.emit(&apos;error&apos;,new Error(&apos;wrong&apos;))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">//======================333333333=========================</span><br><span class="line">// 移除绑定事件</span><br><span class="line">myEmitter.on(&apos;event&apos;, (param) =&gt; &#123;</span><br><span class="line">  console.log(param)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">//触发事件</span><br><span class="line">myEmitter.emit(&apos;event&apos;,&apos;51zxw&apos;)</span><br><span class="line">myEmitter.removeAllListeners(&apos;event&apos;)</span><br><span class="line">myEmitter.emit(&apos;event&apos;,&apos;51zxw&apos;)</span><br></pre></td></tr></table></figure>
+
+<p><code>通过刚才的使用就能知道eventEmitter的监听，移除等功能是如何使用的，node的大部分模块在底层继承了这个模块后就拥有这些方法，因此也可以在这个基础上实现自己的监听函数，比如req.on(&#39;data&#39;), fs.on(&#39;end&#39;)等，但我们调用这些api时，通过将事件推到任务队列，当任务有了结果以后，就能通过监听来处理结果了，接下来我们可以实现一个简易的eventEmitter，看看node底层是如何做到以下功能的</code></p>
+<ul>
+<li><p>1.注册</p>
+</li>
+<li><p>2.触发</p>
+</li>
+<li><p>3.移除</p>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">class EventEmitter&#123;</span><br><span class="line">  constructor()&#123;</span><br><span class="line">    this._events=&#123;&#125;//定义事件对象</span><br><span class="line">  &#125;</span><br><span class="line">   //注册</span><br><span class="line">  on(type,listener)&#123;</span><br><span class="line">	    let events =this._events;</span><br><span class="line">	    let existing = events[type];</span><br><span class="line">	    //判断相应的type的方法是否存在</span><br><span class="line">	    if(existing===undefined)&#123;</span><br><span class="line">	      events[type]=[listener];</span><br><span class="line">	    &#125;else&#123;</span><br><span class="line">	    	events[type]=[...existing,listener]</span><br><span class="line">	    &#125;</span><br><span class="line">	    return this;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  // 触发</span><br><span class="line">  emit(type,...args)&#123;</span><br><span class="line">    const handler=this._events[type];</span><br><span class="line">    if(!handler)&#123;</span><br><span class="line">      console.log(`event &apos;$&#123;type&#125;&apos; not existing!`)</span><br><span class="line">    &#125;else&#123;</span><br><span class="line">      const length=handler.length</span><br><span class="line">	    if(length === 1)&#123;</span><br><span class="line">	    	handler[0](args)</span><br><span class="line">	    &#125;else if(length&gt;1)&#123;</span><br><span class="line">	      for(let i=0;i&lt;length;i++)&#123;</span><br><span class="line">		      handler[i](args)</span><br><span class="line">	      &#125;</span><br><span class="line">	    &#125;else&#123;</span><br><span class="line">	      return this</span><br><span class="line">	    &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"> </span><br><span class="line"> // 删除</span><br><span class="line"> off(type,listener)&#123;</span><br><span class="line">	 let list=this._events[type];</span><br><span class="line">	 if (!list) &#123;</span><br><span class="line">	 		//要删的事件不存在</span><br><span class="line">	 		console.log(`event &apos;$&#123;type&#125;&apos; not existing!`)</span><br><span class="line">	 &#125;else&#123;</span><br><span class="line">	 		//要删的事件存在</span><br><span class="line">	 	  let length=list.length</span><br><span class="line">	 	  let position</span><br><span class="line">	 	  if(length === 1)&#123;</span><br><span class="line">  	 		//要删的事件存在且只有1个监听</span><br><span class="line">	 	    delete this._events[type]</span><br><span class="line">	 	  &#125;else&#123;</span><br><span class="line">  	 		//要删的事件存在且有多个监听</span><br><span class="line">  	 		if(!listener)&#123;</span><br><span class="line">  	 			//没有指定删除哪个，默认删除最后一次添加的事件</span><br><span class="line">  	 			this._events[type].pop()</span><br><span class="line">  	 			return this</span><br><span class="line">  	 		&#125;else&#123;</span><br><span class="line">  	 			//指定了具体删哪个</span><br><span class="line">  	 			for(let i=0;i&lt;length;i++)&#123;</span><br><span class="line">		 	  		//找出需要删除的事件的下标</span><br><span class="line">		 	  		// console.log(&apos;mmmm&apos;,list[i])</span><br><span class="line">		 	  		if(list[i]+&apos;&apos; === listener+&apos;&apos;)&#123;</span><br><span class="line">		 	  			position = i</span><br><span class="line">		 	  		&#125;else&#123;</span><br><span class="line">		 	  			position = -1</span><br><span class="line">		 	  		&#125;</span><br><span class="line">	 	  	  &#125;</span><br><span class="line">	 	  	  // console.log(this._events[type])</span><br><span class="line">	 	  	  if(position!==-1)&#123;</span><br><span class="line">	 	  	    delete this._events[type].splice(position,1)</span><br><span class="line">	 	  	  &#125;else&#123;</span><br><span class="line">	  	 			this._events[type].pop()</span><br><span class="line">	 	  	  &#125;</span><br><span class="line"></span><br><span class="line">  	 		&#125;</span><br><span class="line">	 	  	</span><br><span class="line">	 	  &#125;</span><br><span class="line">	 &#125;</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">let emitter = new EventEmitter()</span><br><span class="line">emitter.on(&apos;data&apos;,(data) =&gt; &#123;</span><br><span class="line">  console.log(&apos;1111111&apos;,data)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">emitter.on(&apos;data&apos;,(data) =&gt; &#123;</span><br><span class="line">  console.log(&apos;222222222&apos;,data)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">emitter.on(&apos;data&apos;,(data) =&gt; &#123;</span><br><span class="line">  console.log(&apos;222222222&apos;,data)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">emitter.emit(&apos;data&apos;,&apos;51zxw&apos;)</span><br><span class="line"></span><br><span class="line">emitter.off(&apos;data&apos;,(data) =&gt; &#123;</span><br><span class="line">  console.log(&apos;222222222&apos;,data)</span><br><span class="line">&#125;)</span><br><span class="line">console.log(&apos;删除&apos;)</span><br><span class="line">emitter.emit(&apos;data&apos;,&apos;51zxw&apos;)</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-2-非阻塞原理"><a href="#3-2-非阻塞原理" class="headerlink" title="3.2 非阻塞原理"></a>3.2 非阻塞原理</h3><p><code>经过编写简单的事件基本模块，我们知道了它的整体触发和接收流程，接下来就来看看，异步操作被推入线程池的时候做了什么</code></p>
+<p><code>这里要说明的是除了我们常见的操作需要异步化，也存在一些异步的API，如setTimenout等。</code></p>
+<ul>
+<li><p>1.在node主线程启动的同时会有一个循环体被创建（任务队列），每次循环都会去查看是否有事件需要被处理，如果有就会取出事件和回调进入底层进行执行，如果没有，就继续等待直到退出</p>
+</li>
+<li><p>2.每次循环中，如何知道有事件被处理呢？在每次循环的时候，实际上都有一个观察者，只需要向观察者询问是否有待处理的事件即可</p>
+</li>
+<li><p>3.这个过程属于生产者/消费者模型，网络请求，文件操作等等都属于事件的生产者，当他们产生了事件后，就进行询问，有则处理，无则退出`</p>
+</li>
+</ul>
+<p><img src="http://m.qpic.cn/psb?/V11lyZSe37bh9p/KUxWQrT5XPg.LBVOP77NZfe4B5vQnMLamritEF5mc2s!/b/dFIBAAAAAAAA&bo=IAO8AQAAAAACJ50!&rf=viewer_4&t=5" alt="ffd"></p>
+<p><code>这里我们以fs.open()为例进行说明，在文件中调用fs.open()方法，node主线程被启动后，循环体任务队列也随之创建，同时它会向IO观察者询问是否有需要处理的事件，此时发现有fs的open，就会把open的事件名和对应的回调取出来，被取出的事件和回调就会调用node核心模块lib/fs.js，核心模块开始调用node内建模块src/node_file.js.cc，内建模块通过libuv库调用uv_fs_open(),将前面的事件和回调包装成请求对象FSReqWrap，随后该对象被windows下的queueUserWorkItem（）推入线程池中等待执行，此时这个事件名能立刻返回，javascript中的剩余程序可以继续执行，直到线程池中有可用的线程时就会将其进行执行后调用底层函数得出结果，最后postQueueCompletionStatus（）会释放线程并取出回调，返回结果，整个过程就会结束。</code><br><img src="http://m.qpic.cn/psb?/V11lyZSe37bh9p/Jzdn9zM4MWY1lWaTfxIKm*qgxYV4OfugKgmK8O8bw8c!/b/dDYBAAAAAAAA&bo=MwPMAQAAAAADF88!&rf=viewer_4&t=5" alt="sdfrg"><br><code>除了常规的异步操作，我们还经常看到setTimeout,setInterval,setImmediate,process.nextTick等异步API，他们和前面说的异步操作的底层处理有什么不同呢？</code></p>
+<ul>
+<li><p>1.setTimeout,setInterval<br><code>与前面所说的过程类似，只是它并没有去线程池里等待执行，而是直接在调用时插入定时器观察者的一个红黑树中，每次循环都会从红黑树中取出对应的对象来判断是否超时，如果超时立刻调用回调返回结果，从这里也可以看出这两个api实际上并不是特别准确</code></p>
+</li>
+<li><p>2.process.nextTick<br><code>使用前面的api能实现直接从观察者对象中迭代红黑树获得结果，但这些操作是需要消耗比较长的时间的，如果我要实现足够短的时间里返回结果呢？这就要用到process.nextTick，它会将每次循环的内容取出来放在下次循环的第一个执行，有人说将setTimeout时间设置为0也能实现啊，关键是迭代本身也会花费时间啊</code></p>
+</li>
+<li><p>3.setImmediate<br><code>在nodev0.9.1之前，setImmediate()还没有实现，那时候的功能主要是通过process.nextTick()来完成process.nextTick()中的回调函数优先级高于setImmediate()，这是因为事件循环对观察者的检查是有先后顺序的，process.nextTick()属于idle观察者，setImmediate()属于check观察者。在每一轮循环检查中，idle观察者优先于I/O观察者，I/O的观察者优先于check观察者</code></p>
+</li>
+</ul>
+<p><code>进入timers阶段，一毫秒已经过去了（setTimeout(fn, 0)等价于setTimeout(fn, 1)），那么setTimeout的回调会首先执行，如果没有到一毫秒，那么在timers阶段的时候，下限时间没到，setTimeout回调不执行，事件循环来到了poll阶段，这个时候队列为空，此时有代码被setImmediate()，于是先执行了setImmediate()的回调函数，之后在下一个事件循环再执行setTimemout的回调函数，而我们在执行代码的时候，进入timers的时间延迟其实是随机的，并不是确定的，所以会出现两个函数执行顺序随机的情况</code></p>
+<p><img src="http://m.qpic.cn/psb?/V11lyZSe37bh9p/tJfxU5zcM0PfXtmSfJFAwrFG2PIB1lSjNs1a.oPjAo4!/b/dL4AAAAAAAAA&bo=MwPMAQAAAAADF88!&rf=viewer_4&t=5" alt="sf"></p>
+<p><code>通过上面的讲解已经知道了在node中异步IO是如何实现的，它就是用主线程分配任务，底层系统实现线程池的调度执行，通过这种方式，当我们构建Web服务器时，不会像其他服务器那样需要开启多线程，因为node底层就已经实现了这样的效果，我们所要做的就只需调用api即可，并不需要在语言层面上继续实现，这就是node高性能的核心之处。</code></p>
+<h2 id="4-buffer-stream到fs"><a href="#4-buffer-stream到fs" class="headerlink" title="4.buffer,stream到fs"></a>4.buffer,stream到fs</h2><h3 id="4-1-三者关系"><a href="#4-1-三者关系" class="headerlink" title="4.1 三者关系"></a>4.1 三者关系</h3><p><code>前面学过了node的模块化，事件驱动/非阻塞模型等基础知识和深入原理，接下来我们来学node中是如何来处理数据的，一般讲到node的处理数据，经常想到buffer，stream和fs等模块，那它们之间有什么联系呢？要想理解清楚它们之间的关系，还要先从node中为什么会出现buffer这个模块说起。</code></p>
+<p><code>在计算机中，我们使用的编程语言经历了机器语言，汇编语言到高级语言的进化，高级语言便于人类的理解，机器语言便于机器理解，这是因为计算机底层本质上是在根据不同的位数的二进制01的不同排列来标识特定的含义，而高级语言要被机器理解还要经历编译阶段，所以越接近机器的语言，程序运行的越快，前端使用js来编码时，大部分时间是在处理整型，字符型，布尔型等数据，由于这些数据本身并不大，所以采用高级语言中的语法直接来写也不会耗费太大的性能，但是在后端，经常会涉及到比较底层 操作或者处理大容量的文件，如果此时继续用以前的数据类型来处理的话，会非常消耗性能，所以需要使用二进制数据类型来处理，但在处理时并不能一次性的包含大容量的数据，所以就需要buffer来临时存放数据，buffer是一个类数组的对象，它对应v8堆内存外的一块单独的内存空间，在创建时就被确定了大小且不可更改，它里面的每个元素(英文)都只占有1个字节，元素的取值范围是0-255，这个255与ASCII码取值有关，最初制定ASCII时，制定者认为只需要8位二进制数仅能完全表示所有的大小写字母，阿拉伯数字和特殊的符号，而8位的二进制数据代表2^8=256种状态，从0计数就是0-255，由此可知，所谓的bufeer其实就是一个存放二进制数据的内存空间，那它和stream有什么联系呢？</code></p>
+<p><code>先来说什么是stream，它的概念是： 数据位置的动态变化的过程，比如说瀑布从悬崖掉落山涧，水从悬崖这个位置到山涧这个位置的相对位置的变化过程就叫流，利用类比思想，计算机中的数据从一个设备到另一个设备的位置变化也叫流，这里说的设备是一种抽象的概念，可以是文件，网络和内存等，水在流动时有方向和快慢，同样类比，计算机数据在传输的过程中同样有方向和速度，在流中有可读流，可写流，双工流和转换流，前两者代表的是单向流，后两者代表的是双向流，可读流有两种模式：流动模式（flowing）或暂停模式（paused），我们可以通过监听可读流的事件来操纵，</code></p>
+<ul>
+<li><p>在流动模式中，数据自动从底层系统读取，并通过 EventEmitter 接口的事件尽可能快地被提供给应用程序</p>
+</li>
+<li><p>在暂停模式中，必须显式调用 stream.read() 读取数据块`</p>
+</li>
+</ul>
+<p><img src="http://m.qpic.cn/psb?/V11lyZSe37bh9p/wDhgv.rGo1Rba5BoliY1FrMioYvwKb.V4rW5E9iY4B0!/b/dFMBAAAAAAAA&bo=TAU8AgAAAAADF0U!&rf=viewer_4&t=5" alt="sfe"><br><code>知道了buffer，stream的关系后，再来看一下为什么会出现fs，其实这里的fs代表的是一大类消费流的对象，在大部分开发时，我们并不需要自己动手创建buffer，管理stream流向，这些内容在我们使用的流对象的底层都实现好了，fs是我们经常使用到的消费流的对象，类似的还有网络模块，压缩模块等</code><br><code>既然实际开发中并不会常用到stream模块，那它存在的意义是什么？</code></p>
+<p><code>stream模块中的api大多是用来让我们利用js的继承来实现消费流对象的，而这些api实际上也是继承自我们前面说过的event模块的EventEmitter类的，可以通过声明一个新的js类后继承四个基本的流类之一（stream.Writeable、 stream.Readable、 stream.Duplex 或 stream.Transform），且确保调用了对应的父类构造器，根据所创建的流类型，新的流类必须实现一个或多个特定的方法：</code><br><img src="http://m.qpic.cn/psb?/V11lyZSe37bh9p/3gFlM7jOejGT3SLz3YaQNOTpm2ApRKhqMGFtA4BqVeE!/b/dDcBAAAAAAAA&bo=MwPMAQAAAAADF88!&rf=viewer_4&t=5" alt="sdfg"></p>
+<p><code>接下来我们就先来体验一下常用的消费流对象，然后尝试自己做一个深入底层看看它们是如何实现的</code></p>
+<ul>
+<li>1.体验时以fs模块进行讲解</li>
+</ul>
+<p><code>fs模块是用来操作文件的模块，它提供了文件从创建到删除的所有操作的api，它本身继承了eventEmitter类，通过事件处理器来处理对应的结果，如果不使用消费流的接口，它本身操作数据时是会把所有的数据先加载在内存中，等所有数据加载好了再进行下一步处理，使用消费流接口后就能实现加载一部分处理一部分(buffer)，处理完的部分就能被GC回收</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">const fs = require(&apos;fs&apos;)</span><br><span class="line"></span><br><span class="line">// fs.readFile(&apos;./7.stream.txt&apos;,(err,data) =&gt; &#123;</span><br><span class="line"></span><br><span class="line">//    if(err) throw err</span><br><span class="line"></span><br><span class="line">//    fs.writeFile(&apos;./7.write.txt&apos;,data,(err) =&gt; &#123;</span><br><span class="line"></span><br><span class="line">//      if(err) throw err</span><br><span class="line"></span><br><span class="line">//    &#125;)</span><br><span class="line"></span><br><span class="line">//  &#125;)</span><br><span class="line"></span><br><span class="line">let rs = fs.createReadStream(&apos;./7.stream.txt&apos;)</span><br><span class="line"></span><br><span class="line">let ws = fs.createWriteStream(&apos;./7.write.txt&apos;)</span><br><span class="line"></span><br><span class="line">rs.on(&apos;data&apos;,(chunk) =&gt; &#123;</span><br><span class="line"></span><br><span class="line">  rs.pipe(ws)</span><br><span class="line"></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">rs.on(&apos;end&apos;,(err) =&gt; &#123;</span><br><span class="line"></span><br><span class="line">  console.log(&apos;ReadStream done!&apos;)</span><br><span class="line"></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-2-模拟实现可读流"><a href="#4-2-模拟实现可读流" class="headerlink" title="4.2 模拟实现可读流"></a>4.2 模拟实现可读流</h3><p><code>接下来我们就来实现一个可读流</code></p>
+<p><code>这里就不去读取实际的文件的内容了，我们来实现将100w个数依次读取出来，在实现的时候步骤就是</code></p>
+<ul>
+<li><p>1.继承Readable</p>
+</li>
+<li><p>2.实现_read()方法</p>
+</li>
+<li><p>3.进行调用</p>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">counter.on(&apos;data&apos;,(chunk) =&gt; &#123;</span><br><span class="line"></span><br><span class="line">  console.log(chunk.toString())</span><br><span class="line"></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">const &#123; Readable &#125; = require(&apos;stream&apos;);</span><br><span class="line"></span><br><span class="line">class Counter extends Readable &#123;</span><br><span class="line">  constructor(opt) &#123;</span><br><span class="line">    super(opt);</span><br><span class="line">    this._max = 1000000;</span><br><span class="line">    this._index = 1;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  _read() &#123;</span><br><span class="line">    const i = this._index++;</span><br><span class="line">    if (i &gt; this._max)</span><br><span class="line">      this.push(null);</span><br><span class="line">    else &#123;</span><br><span class="line">      const str = String(i);</span><br><span class="line">      const buf = Buffer.from(str, &apos;ascii&apos;);</span><br><span class="line">      this.push(buf);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">let counter = new Counter()</span><br><span class="line">counter.on(&apos;data&apos;,(chunk) =&gt; &#123;</span><br><span class="line">  console.log(chunk.toString())</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">counter.on(&apos;error&apos;,(err) =&gt; &#123;</span><br><span class="line">  console.log(err)</span><br><span class="line">&#125;)</span><br><span class="line">counter.on(&apos;end&apos;,() =&gt; &#123;</span><br><span class="line">  console.log(&apos;done!!!&apos;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h2 id="5-工具模块"><a href="#5-工具模块" class="headerlink" title="5.工具模块"></a>5.工具模块</h2><h3 id="5-1-path模块"><a href="#5-1-path模块" class="headerlink" title="5.1 path模块"></a>5.1 path模块</h3><p><code>学完了node的模块化，事件驱动/非阻塞模型和数据处理之后，我们面临的下一个问题接下来应该先学什么？这里我自己的学习路径是先来把基础性的工作做好，node中重点模块是关于网络相关的模块，但是在学习网络相关模块的时候会涉及到很多路径判断，url解析等等工作，如果我们没有提前学过这些模块而直接去学网络模块，就会在学习的时候需要不断的补充这些知识，所以先来把这些基础模块学习一下，这里的这些模块大多是在学它们的用法，在学习时比较枯燥，所以我带领大家来一起过一遍，一边讲解一边练习，让大家能很快掌握并熟练使用它们</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">0.常识</span><br><span class="line"></span><br><span class="line">path.delimiter路径定界符；</span><br><span class="line"></span><br><span class="line">path.sep路径片段分割符\</span><br><span class="line"></span><br><span class="line">1.拼接与解析</span><br><span class="line"></span><br><span class="line">path.join()</span><br><span class="line"></span><br><span class="line">path.format()</span><br><span class="line"></span><br><span class="line">path.parse()</span><br><span class="line"></span><br><span class="line">path.normalize()</span><br><span class="line"></span><br><span class="line">2.获取</span><br><span class="line"></span><br><span class="line">path.basename()</span><br><span class="line"></span><br><span class="line">path.extname()</span><br><span class="line"></span><br><span class="line">path.dirname()</span><br><span class="line"></span><br><span class="line">path.relative()相对</span><br><span class="line"></span><br><span class="line">path.resolve()绝对</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-2-querystring模块"><a href="#5-2-querystring模块" class="headerlink" title="5.2 querystring模块"></a>5.2 querystring模块</h3><p><code>接着来看queryString模块，它是用来解析和格式化 URL 查询字符串的实用工具</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">querystring.decode()、querystring.parse()解析的结果并不是原型继承自 JavaScript Object</span><br><span class="line"></span><br><span class="line">querystring.encode()、querystring.stringify()</span><br></pre></td></tr></table></figure>
+
+<h2 id="6-网络模块"><a href="#6-网络模块" class="headerlink" title="6.网络模块"></a>6.网络模块</h2><h3 id="6-1-net模块"><a href="#6-1-net模块" class="headerlink" title="6.1 net模块"></a>6.1 net模块</h3><p><code>前面学习网络协议的时候我们了解到tcp/ip协议族包含了应用层，传输层，网际层和接口层，各层都有自己对应的协议，比如http协议对应 应用层，tcp协议对应传输层，ip协议对应网际层</code></p>
+<p><code>今天我们学习的网络模块实际上就是对于这些协议的封装，</code></p>
+<p><code>net模块对应传输层的tcp协议封装</code></p>
+<p><code>dram模块对应传输层的udp协议封装</code></p>
+<p><code>http模块对应应用层的http协议封装</code></p>
+<p><code>tls模块对应应用层http加密协议封装</code></p>
+<p><code>通过这些模块我们可以很容易的就创建一个服务器用于响应请求，接下来就一个个介绍并使用一下这些模块</code></p>
+<p><code>先来看tcp协议，我们知道，在tcp协议连接前，客户端和服务端会各出一个套接字，经过三次握手四次断开实现数据的传输，在理解net模块之前，我们还需要理解接下来要使用的两个关键字: server和socket</code></p>
+<ul>
+<li><p>server：一次连接服务</p>
+</li>
+<li><p>socket：tcp套接字的封装，建立客-服连接</p>
+</li>
+</ul>
+<p><code>接下来编码看看它具体如何使用</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">const net = require(&apos;net&apos;)</span><br><span class="line"></span><br><span class="line">//服务端</span><br><span class="line">let server = net.createServer((socket) =&gt; &#123;</span><br><span class="line">  socket.write(&apos;I am from server!!!&apos;)</span><br><span class="line">  socket.on(&apos;data&apos;,(data) =&gt; &#123;</span><br><span class="line">  	console.log(&apos;来自客户端的数据:&apos;,data.toString())</span><br><span class="line">  &#125;)</span><br><span class="line">  socket.on(&apos;end&apos;,() =&gt; &#123;</span><br><span class="line">    console.log(&apos;connection close!!!&apos;)</span><br><span class="line">  &#125;)</span><br><span class="line"></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">server.listen(8529,() =&gt; &#123;</span><br><span class="line">  console.log(&apos;server listen on http://localhost:8529&apos;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">const net = require(&apos;net&apos;)</span><br><span class="line">const client = net.connect(&#123;port:8529&#125;,()=&gt;&#123;</span><br><span class="line">	client.write(&apos;I am from client!!!&apos;)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">client.on(&apos;data&apos;,(data) =&gt; &#123;</span><br><span class="line">  console.log(&apos;来自服务端的数据:&apos;,data.toString())</span><br><span class="line">  client.end()</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">client.on(&apos;end&apos;,() =&gt; &#123;</span><br><span class="line">  console.log(&apos;client disconnection!!!&apos;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p><code>使用完了以后，大家肯定会有疑惑，这个模块到底能做什么呢？接下来带大家实现一个命令行版本的聊天室，让大家感受一下它的作用，这个功能主要分为以下几部分：</code></p>
+<ul>
+<li><p>1.建立服务器</p>
+</li>
+<li><p>2.建立客户端</p>
+</li>
+<li><p>3.用户登录与广播</p>
+</li>
+<li><p>4.用户退出与广播</p>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br></pre></td><td class="code"><pre><span class="line">const net = require(&apos;net&apos;);</span><br><span class="line">const server = net.createServer();</span><br><span class="line">const clients = &#123;&#125;;//保存客户端的连接</span><br><span class="line">var client = null;//当前客户连接</span><br><span class="line">var uid = 0;</span><br><span class="line"></span><br><span class="line">server.on(&apos;connection&apos;,(socket)=&gt;&#123;</span><br><span class="line">    //启动心跳机制,表明client与server的连接是否还在的检测机制</span><br><span class="line">    var isOnline = !0;</span><br><span class="line">    setInterval(()=&gt;&#123;</span><br><span class="line">        if(!isOnline)&#123;</span><br><span class="line">            client = socket;</span><br><span class="line">            quit(socket.nick);</span><br><span class="line">            return;</span><br><span class="line">        &#125;</span><br><span class="line">        if(socket.writable)&#123;</span><br><span class="line">            isOnline = !1;</span><br><span class="line">            socket.write(&apos;::&apos;);</span><br><span class="line">        &#125;else&#123;</span><br><span class="line">            client = socket;</span><br><span class="line">            quit(socket.nick);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;,3000);</span><br><span class="line"></span><br><span class="line">    socket.on(&apos;end&apos;,()=&gt;&#123;</span><br><span class="line">        console.log(`client disconnected.\n\r`);</span><br><span class="line">        socket.destroy();</span><br><span class="line">    &#125;);</span><br><span class="line">    socket.on(&apos;error&apos;,(error)=&gt;&#123;</span><br><span class="line">        console.log(error.message);</span><br><span class="line">    &#125;);</span><br><span class="line">    socket.on(&apos;data&apos;,(chunk)=&gt;&#123;</span><br><span class="line">        console.log(&apos;data============&apos;)</span><br><span class="line">        client = socket;</span><br><span class="line">        var msg = JSON.parse(chunk.toString());</span><br><span class="line">        if(msg.cmd==&apos;keep&apos;)&#123;</span><br><span class="line">            console.log(msg)</span><br><span class="line">            isOnline = !0;</span><br><span class="line">            return;</span><br><span class="line">        &#125;</span><br><span class="line">        dealMsg(msg);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">server.on(&apos;error&apos;,(err)=&gt;&#123;</span><br><span class="line">    console.log(err);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">server.on(&apos;listening&apos;,()=&gt;&#123;</span><br><span class="line">    console.log(`listening on $&#123;server.address().address&#125;:$&#123;server.address().port&#125;\n\r`);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">server.listen(8060);//启动监听</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * 释放连接资源</span><br><span class="line"> */</span><br><span class="line">function freeConn(conn)&#123;</span><br><span class="line">    conn.end();</span><br><span class="line">    delete clients[conn.uuid];</span><br><span class="line">    conn.timer&amp;&amp;clearInterval(conn.timer);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * 退出聊天室</span><br><span class="line"> */</span><br><span class="line">function quit(nick)&#123;</span><br><span class="line">    var message = `===============*** 小伙伴$&#123;nick&#125;退出了聊天室.***===============`;</span><br><span class="line">    broadcast(message);</span><br><span class="line">    freeConn(client);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function chat(msg)&#123;</span><br><span class="line">    if(msg.msg.toLowerCase()==&apos;quit&apos;||msg.msg.toLowerCase()==&apos;exit&apos;)&#123;</span><br><span class="line">        quit(msg.nick);</span><br><span class="line">        return ;</span><br><span class="line">    &#125;</span><br><span class="line">    var message = `$&#123;msg.nick&#125;说：=== $&#123;msg.msg&#125; ===`;</span><br><span class="line">    broadcast(message);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * 处理用户信息</span><br><span class="line"> */</span><br><span class="line">function dealMsg(msg)&#123;</span><br><span class="line">    const cmd = msg.cmd;</span><br><span class="line">    const funs = &#123;</span><br><span class="line">        &apos;login&apos;:login,</span><br><span class="line">        &apos;chat&apos;:chat,</span><br><span class="line">        &apos;quit&apos;:quit,</span><br><span class="line">        &apos;exit&apos;:quit</span><br><span class="line">    &#125;;</span><br><span class="line">    if(typeof funs[cmd] !== &apos;function&apos;) return !1;</span><br><span class="line">    funs[cmd](msg);</span><br><span class="line">&#125;</span><br><span class="line">/**</span><br><span class="line"> * 用户首次进入聊天室</span><br><span class="line"> */</span><br><span class="line">function login(msg)&#123;</span><br><span class="line">    var uuid = &apos;&apos;;</span><br><span class="line">    uuid = getRndStr(15)+(++uid);//产生用户ID</span><br><span class="line">    client.write(`======================================================================</span><br><span class="line">        欢迎你，$&#123;msg.nick&#125;：这里总共有$&#123;Object.keys(clients).length&#125;个小伙伴在聊天.\r\n=======================================================================`)</span><br><span class="line">    client.nick = msg.nick;</span><br><span class="line">    client.uuid = uuid;</span><br><span class="line">    clients[uuid] = client;</span><br><span class="line">    broadcast(`系统：============*** $&#123;msg.nick&#125;进入了聊天室. ***===============`);</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * 随机指定长度(len)的字符串</span><br><span class="line"> */</span><br><span class="line">function getRndStr(len=1)&#123;</span><br><span class="line">    var rndStr = &apos;&apos;;</span><br><span class="line">    for (; rndStr.length &lt; len; rndStr += Math.random().toString(36).substr(2));</span><br><span class="line">    return rndStr.substr(0, len);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * 广播消息</span><br><span class="line"> */</span><br><span class="line">function broadcast(msg)&#123;</span><br><span class="line">    Object.keys(clients).forEach((uuid)=&gt;&#123;</span><br><span class="line">        if((clients[uuid]!=client)&amp; clients[uuid].writable)&#123;</span><br><span class="line">            clients[uuid].write(msg);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line">const net = require(&apos;net&apos;);</span><br><span class="line">const cout = process.stdout;</span><br><span class="line">const cin = process.stdin;</span><br><span class="line"></span><br><span class="line">var client = null;</span><br><span class="line">var nick = &apos;&apos;;</span><br><span class="line"></span><br><span class="line">cout.write(`请输入昵称：`);</span><br><span class="line">//监听命令行输入</span><br><span class="line">cin.on(&apos;data&apos;,(chunk)=&gt;&#123;</span><br><span class="line">    if(chunk.toString()!=&apos;\r\n&apos;)&#123;</span><br><span class="line">        if(client === null)&#123;</span><br><span class="line">            nick = (chunk+&apos;&apos;).replace(/[\r\n]/ig,&quot;&quot;);</span><br><span class="line">            createClient();</span><br><span class="line">        &#125;else&#123;</span><br><span class="line">            msg = (chunk+&apos;&apos;).replace(/[\r\n]/ig,&quot;&quot;);</span><br><span class="line">            client.write(JSON.stringify(&#123;</span><br><span class="line">                cmd: &apos;chat&apos;,</span><br><span class="line">                msg: msg,</span><br><span class="line">                nick: nick</span><br><span class="line">            &#125;));</span><br><span class="line">            //如果输入是exit或quit则断开连接并退出</span><br><span class="line">            if(msg.toLowerCase() == &apos;exit&apos; || msg.toLowerCase() == &apos;quit&apos;)&#123;</span><br><span class="line">                client.end();</span><br><span class="line">                cin.end();</span><br><span class="line">                return;</span><br><span class="line">            &#125;</span><br><span class="line">            cout.write(`你说：$&#123;msg&#125;\n\r`);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;else&#123;</span><br><span class="line">        cout.write(`请输入昵称：`);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">function addListener(client) &#123;</span><br><span class="line">    client.on(&apos;connect&apos;, () =&gt; &#123;</span><br><span class="line">        cout.write(`已连接到服务器\n\r`);</span><br><span class="line">        client.write(JSON.stringify(&#123;</span><br><span class="line">            cmd: &apos;login&apos;,</span><br><span class="line">            msg: &apos;hello server&apos;,</span><br><span class="line">            nick: nick</span><br><span class="line">        &#125;));</span><br><span class="line">    &#125;);</span><br><span class="line">    client.on(&apos;end&apos;, (chunk) =&gt; &#123;</span><br><span class="line">        cout.write(`与服务器断开连接.\n\r`);</span><br><span class="line">    &#125;);</span><br><span class="line">    client.on(&apos;data&apos;, (chunk) =&gt; &#123;</span><br><span class="line">        //如果是心跳信息则回应keep命令</span><br><span class="line">        if(chunk.toString()==&apos;::&apos;)&#123;</span><br><span class="line">            client.write(JSON.stringify(&#123;</span><br><span class="line">                cmd: &apos;keep&apos;,</span><br><span class="line">                msg: &apos;&apos;,</span><br><span class="line">                nick: nick</span><br><span class="line">            &#125;));</span><br><span class="line">            return ;</span><br><span class="line">        &#125;</span><br><span class="line">        cout.write(`$&#123;chunk&#125;\n\r`);</span><br><span class="line">    &#125;);</span><br><span class="line">    client.on(&apos;error&apos;, (err) =&gt; &#123;</span><br><span class="line">        cout.write(`an error has occured.\n\r$&#123;err&#125;`);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br><span class="line">/**</span><br><span class="line"> * 创建socket并连接服务器</span><br><span class="line"> */</span><br><span class="line">function createClient()&#123;</span><br><span class="line">    console.log(&apos;\033[2J&apos;);//清屏操作</span><br><span class="line">    cout.write(`输入&apos;EXIT OR QUIT&apos;退出聊天室.\r\n`);</span><br><span class="line">    client = new net.Socket()</span><br><span class="line">    client.connect(&#123;port:8060/*,host:&apos;1.1.1.69&apos;*/&#125;);</span><br><span class="line">    addListener(client);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="6-2-http模块"><a href="#6-2-http模块" class="headerlink" title="6.2 http模块"></a>6.2 http模块</h3><p><code>接下来我们看http模块，前面讲了net模块，与它对应的其实还有dram模块，我们仔细的学过了net那dram就不在话下了，它们都属于传输层的内容就不过多的展开了。有兴趣的同学可以去按照学习net的思路去学习一下dram，本节课我们来讲解http模块，它属于应用层协议封装的模块，利用它我们可以很容易的创建一个迷你的web服务器，为什么说是迷你的web服务器呢?因为它并不具备各种路由分析，参数处理，解析cookie等功能，这些都需要我们自己来写，所以有的同学在刚接触node的时候就直接上手用一些封装好的框架，比如express，koa等，但他们并不知道这些框架是怎样实现的，更不知道我们前面讲的node的许多核心的知识，到头来只是一个合格的使用者而无法更进一步变成合格的创造者，有了前面的基础准备，就可以带领大家来看一下像express中的各种拆分各种功能是怎么实现的，各部分的原理是什么，然后我们再来使用框架开发，这样的话，不管是什么类型的框架，大家都能在比较短的时间里掌握它。</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">简单的使用</span><br><span class="line"></span><br><span class="line">const http = require(&apos;http&apos;)</span><br><span class="line"></span><br><span class="line">const server = http.createServer((req,res) =&gt; &#123;</span><br><span class="line"></span><br><span class="line">  if(req.url === &apos;/&apos;)&#123;</span><br><span class="line"></span><br><span class="line">    res.end(&apos;this is root page&apos;)</span><br><span class="line"></span><br><span class="line">  &#125;else&#123;</span><br><span class="line"></span><br><span class="line">  	res.end(&apos;sorry, this page is not exist!!!&apos;)</span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">server.listen(8875,() =&gt; &#123;</span><br><span class="line"></span><br><span class="line">  console.log(&apos;server listen on http://localhost:8875&apos;)</span><br><span class="line"></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p><code>经过简单的使用，我们能快速创建一个服务器，但这个服务器离真正使用还很远，服务器中常见的路由分析，权限校验，功能拆分,  连接数据库等还需要我们来自己实现，接下来我们就尝试着自己实现</code></p>
+<ul>
+<li><p>1.路由分析route</p>
+</li>
+<li><p>2.功能拆分controller</p>
+</li>
+<li><p>3.连接数据库db</p>
+</li>
+<li><p>4.权限校验cookie</p>
+</li>
+</ul>
+<p><code>前面的拆分比较简单，是常见的mvc的模式，实现了前面的功能后，我们来看比较重要的权限管理，这里提前说一下，现在使用的是cookie，但是在实战中使用的是jwt，这两种模式现在都有人用，我们就演示(cookie)，使用(jwt)，先来认识一下什么是cookie</code></p>
+<p><code>cookie：浏览器端保存的不大于5kb的，跨域不共享的字符串</code></p>
+<p><code>那它是如何来使用的呢？</code></p>
+<p><code>当设置cookie后，前端每次发起请求都会自动携带cookie到后端，后端根据cookie中的字段判断用户的登录状态，如果登录就给一定的权限，如果未登录就跳到登录页面，接下来演示一下：</code></p>
+<ul>
+<li><p>1.未登录前看不到用户中心(此时cookie中无验证信息)</p>
+</li>
+<li><p>2.登录后可以看到用户中心（此时cookie中有验证信息）</p>
+</li>
+<li><p>3.退出登录再次刷新又不能看到用户中心(此时cookie中无验证信息)</p>
+</li>
+</ul>
+<div style="text-align:center;margin:30px;font-size:20px;border-radius:5px;border:3px solid #eee; cursor:pointer;" onclick="javascript:window.scrollTo(0, 0)">TOP</div>
+
+
+
+
+
+
+
+
+
+
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title='0' data-url='http://link.hhtjim.com/163/5146554.mp3'></li>
+                        
+                    
+                        
+                            <li title='1' data-url='http://link.hhtjim.com/qq/001faIUs4M2zna.mp3'></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/diaspora.js"></script>
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+</html>
