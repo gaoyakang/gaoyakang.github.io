@@ -1,0 +1,208 @@
+
+<!DOCTYPE html>
+<html lang="en" class="loading">
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>鉴权与数据库 - GYK</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate">
+    <meta name="keywords" content="node,"> 
+    <meta name="description" content="Lonely&#39;s blog,BOTTOM
+
+鉴权与数据库
+后端常常会涉及到鉴权操作，但鉴权又往往与数据库数据存取联系在一起，所以就将数据库和鉴权放在一起学习
+
+数据库类比图书馆里的书籍需要被放在书柜中，互联网上的电子文档也需要,"> 
+    <meta name="author" content="kk"> 
+    <link rel="alternative" href="atom.xml" title="GYK" type="application/atom+xml"> 
+    
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+    <link rel="stylesheet" href="/css/diaspora.css">
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+              google_ad_client: "ca-pub-8691406134231910",
+              enable_page_level_ads: true
+         });
+    </script>
+    <script async custom-element="amp-auto-ads" src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+    </script>
+</head>
+</html>
+<body class="loading">
+    <span id="config-title" style="display:none">GYK</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="icon-home image-icon" href="javascript:;" data-url="https://gaoyakang.github.io"></a>
+    <div title="播放/暂停" class="icon-play"></div>
+    <h3 class="subtitle">鉴权与数据库</h3>
+    <div class="social">
+        <!--<div class="like-icon">-->
+            <!--<a href="javascript:;" class="likeThis active"><span class="icon-like"></span><span class="count">76</span></a>-->
+        <!--</div>-->
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">鉴权与数据库</h1>
+        <div class="stuff">
+            <span>六月 24, 2019</span>
+            
+
+        </div>
+        <div class="content markdown">
+            <div style="text-align:center;margin:30px;font-size:20px;border-radius:5px;border:3px solid #eee; cursor:pointer;" onclick="javascript:window.scrollTo(0, document.body.clientHeight)">BOTTOM</div>
+
+<h1 id="鉴权与数据库"><a href="#鉴权与数据库" class="headerlink" title="鉴权与数据库"></a>鉴权与数据库</h1><blockquote>
+<p>后端常常会涉及到鉴权操作，但鉴权又往往与数据库数据存取联系在一起，所以就将数据库和鉴权放在一起学习</p>
+</blockquote>
+<h2 id="数据库"><a href="#数据库" class="headerlink" title="数据库"></a>数据库</h2><p><code>类比图书馆里的书籍需要被放在书柜中，互联网上的电子文档也需要存放在柜子里，这个柜子就叫数据库，最常用的数据库有关系型数据库和非关系型数据库，其中最具代表性的就是mysql，mongodb和redis，关系型数据库的数据依赖结构十分清晰，非关系型数据库并发读写速度非常快，持久型数据库能实现变量内存持久化，它们各有优缺点，其中mysql数据库采用行列字段的方式存储数据，mongodb采用文档形式存储数据，redis采用键值对形式存储数据，接下来看看这些数据库的基本使用</code></p>
+<h3 id="mysql"><a href="#mysql" class="headerlink" title="mysql"></a>mysql</h3><p><code>首先根据该视频安装mysql，https://www.51zxw.net/Show.aspx?cid=651&amp;id=65189，在安装的工程中记得要勾选workbench选项，它是mysql的可视化操作工具，过程中设置的密码要记牢，下载完成后记得配置全局变量，将mysql服务配置为系统服务，接着就是一些常用的数据库操作指令：</code></p>
+<p><code>基础语法：</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">mysql -u root -p</span><br><span class="line">use 数据库名称 (打开数据库)</span><br><span class="line">create database xxx (创建数据库)</span><br><span class="line">drop database xxx (删除数据库)</span><br><span class="line">show databases (显示数据库列表)</span><br><span class="line">create  table 表名(字段 属性 )</span><br><span class="line">drop table 表名(删除表)</span><br><span class="line">show tables (显示数据库中的表)</span><br><span class="line">show columns from 数据表(显示字段属性)</span><br><span class="line">show index from 数据表(显示索引)</span><br><span class="line">SET SQL_SAFE_UPDATES = 0 设置安全模式</span><br></pre></td></tr></table></figure>
+
+<p><code>CRUD基础语法</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">- ①增</span><br><span class="line">`insert into 表名(字段名) values(真实值);`</span><br><span class="line"></span><br><span class="line">- ②查</span><br><span class="line">`select 字段  from 表名 where 字段 like &apos;%值%&apos; order by 字段 desc; (%表任意)`</span><br><span class="line"></span><br><span class="line">- ③改</span><br><span class="line">`update 表名 set 字段=值 where 条件;`</span><br><span class="line"></span><br><span class="line">- ④删</span><br><span class="line">`delete from 表名 where 条件`</span><br></pre></td></tr></table></figure>
+
+<h3 id="mongodb"><a href="#mongodb" class="headerlink" title="mongodb"></a>mongodb</h3><p><code>首先根据https://www.runoob.com/mongodb/mongodb-window-install.html安装数据库</code></p>
+<p><code>使用流程</code></p>
+<ul>
+<li>①打开服务(wind是打开系统服务。linux直接mongod)</li>
+<li>②命令行连接(mongo)</li>
+<li>③操作数据库(导入表)</li>
+</ul>
+<p><code>CRUD基础语法</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">mongoimport -d 库 -c表 --file 地址</span><br><span class="line"></span><br><span class="line">use 数据库名(创建数据库)</span><br><span class="line"></span><br><span class="line">db.dropDatabase()(删除数据库)</span><br><span class="line"></span><br><span class="line">db.createCollection(&quot;表名&quot;)(创建表)</span><br><span class="line"></span><br><span class="line">db.表名.insert(&#123;xxx&#125;)(创建表)</span><br><span class="line"></span><br><span class="line">db.表名.drop()(删除表)</span><br><span class="line"></span><br><span class="line">db.表名.insert(&#123; &#125;)</span><br><span class="line"></span><br><span class="line">db.表名.remove(&#123; &#125;)</span><br><span class="line"></span><br><span class="line">db.表名.update(&#123;a&#125;,&#123;$set:&#123;b&#125;&#125;)</span><br><span class="line"></span><br><span class="line">db.表名.find()</span><br></pre></td></tr></table></figure>
+
+<h3 id="redis"><a href="#redis" class="headerlink" title="redis"></a>redis</h3><p><code>redis先安装，教程随便参考,它的语法特别简单</code></p>
+<p><code>CRUD语法</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">redis-cli直接就登录了</span><br><span class="line"></span><br><span class="line">set key value</span><br><span class="line"></span><br><span class="line">get key</span><br><span class="line"></span><br><span class="line">keys *</span><br></pre></td></tr></table></figure>
+
+<h2 id="鉴权"><a href="#鉴权" class="headerlink" title="鉴权"></a>鉴权</h2><p><code>在服务端是存在多种鉴权的方案的，最常用的就是cookie/session+redis，其他的还有jwt，先来说前一种</code><br><code>用express新建一个项目,先把杂七杂八的模板渲染全清除掉，路由只留下user，此时我们做一个用户的登录校验，所以先来在workbench中新建一个blogs的数据库，在里面新建一个admin的表，表里添加username和password字段，预先插入数据username=aaa,password=123,接着来写nodejs连接mysql的文件，把它放在db/mysql.js,具体如下</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">const mysql = require(&apos;mysql&apos;)</span><br><span class="line">const &#123; MYSQL_CONF &#125; = require(&apos;../conf/mysql_conf&apos;)</span><br><span class="line"></span><br><span class="line">//创建连接对象</span><br><span class="line">const con = mysql.createConnection(MYSQL_CONF)</span><br><span class="line"></span><br><span class="line">//开始连接</span><br><span class="line">con.connect()</span><br><span class="line"></span><br><span class="line">//执行sql语句</span><br><span class="line">function exec(sql)&#123;</span><br><span class="line">  const promise = new Promise((resolve,reject) =&gt; &#123;</span><br><span class="line">  	con.query(sql,(err,result) =&gt; &#123;</span><br><span class="line">  	  if(err) &#123;</span><br><span class="line">  	    reject(err)</span><br><span class="line">  	    return</span><br><span class="line">  	  &#125;</span><br><span class="line">  	  resolve(result)</span><br><span class="line">  	&#125;)</span><br><span class="line">  &#125;)</span><br><span class="line">  return promise</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">module.exports = &#123;</span><br><span class="line">  exec,</span><br><span class="line">  escape: mysql.escape</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">const env = process.env.NODE_ENV</span><br><span class="line"></span><br><span class="line">let MYSQL_CONF;</span><br><span class="line">let REDIS_CONF;</span><br><span class="line"></span><br><span class="line">if (env === &apos;dev&apos;) &#123;</span><br><span class="line">  MYSQL_CONF = &#123;</span><br><span class="line">    host: &apos;localhost&apos;,</span><br><span class="line">    user: &apos;root&apos;,</span><br><span class="line">    password: &apos;123&apos;,</span><br><span class="line">    port: &apos;3306&apos;,</span><br><span class="line">    database: &apos;blogs&apos;</span><br><span class="line">  &#125;</span><br><span class="line">  REDIS_CONF = &#123;</span><br><span class="line">    port: 6379,</span><br><span class="line">    host: &apos;127.0.0.1&apos;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">if (env === &apos;production&apos;) &#123;</span><br><span class="line">  MYSQL_CONF = &#123;</span><br><span class="line">    host: &apos;localhost&apos;,</span><br><span class="line">    user: &apos;root&apos;,</span><br><span class="line">    password: &apos;123&apos;,</span><br><span class="line">    port: &apos;3306&apos;,</span><br><span class="line">    database: &apos;blogs&apos;</span><br><span class="line">  &#125;</span><br><span class="line">  REDIS_CONF = &#123;</span><br><span class="line">    port: 6379,</span><br><span class="line">    host: &apos;127.0.0.1&apos;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">module.exports = &#123;</span><br><span class="line">  MYSQL_CONF,</span><br><span class="line">  REDIS_CONF</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>接着来新建处理数据的controller和model，具体如下：</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">//controller下的user.js</span><br><span class="line">const &#123;exec&#125; = require(&apos;../db/mysql&apos;)</span><br><span class="line"></span><br><span class="line">const login =  (username,password) =&gt; &#123;</span><br><span class="line">  const sql = `select * from admin where password=&apos;$&#123;password&#125;&apos;;`</span><br><span class="line">  return exec(sql).then(rows =&gt; &#123;</span><br><span class="line">    return rows[0].username || &apos;&apos;</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">module.exports = &#123;</span><br><span class="line">  login</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>这个是model</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">class BaseModel &#123;</span><br><span class="line">    constructor(data, message) &#123;</span><br><span class="line">        // if (typeof data === &apos;string&apos;) &#123;</span><br><span class="line">        //     this.message = data</span><br><span class="line">        //     data = null</span><br><span class="line">        //     message = null</span><br><span class="line">        // &#125;</span><br><span class="line">        if (data) &#123;</span><br><span class="line">            this.data = data</span><br><span class="line">        &#125;</span><br><span class="line">        if (message) &#123;</span><br><span class="line">            this.message = message</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class SuccessModel extends BaseModel &#123;</span><br><span class="line">    constructor(data, message) &#123;</span><br><span class="line">        super(data, message)</span><br><span class="line">        this.errno = 0</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class ErrorModel extends BaseModel &#123;</span><br><span class="line">    constructor(data, message) &#123;</span><br><span class="line">        super(data, message)</span><br><span class="line">        this.errno = -1</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">module.exports = &#123;</span><br><span class="line">    SuccessModel,</span><br><span class="line">    ErrorModel</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>最后来看route</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">const express = require(&apos;express&apos;);</span><br><span class="line">const router = express.Router();</span><br><span class="line">const &#123; login &#125; = require(&apos;../controller/user&apos;)</span><br><span class="line">const &#123; SuccessModel, ErrorModel &#125; = require(&apos;../model/resModel&apos;)</span><br><span class="line"></span><br><span class="line">router.get(&apos;/login&apos;,(req,res,next) =&gt; &#123;</span><br><span class="line">  const &#123; username, password &#125; = req.query</span><br><span class="line">  const result = login(username,password)</span><br><span class="line">  return result.then(data =&gt; &#123;</span><br><span class="line">    if(data)&#123;</span><br><span class="line">      return res.json(new SuccessModel())</span><br><span class="line">    &#125;</span><br><span class="line">    res.json(new ErrorModel(&apos;登录失败&apos;))</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;)</span><br><span class="line">module.exports = router;</span><br></pre></td></tr></table></figure>
+
+<p><code>安装mysql依赖，npm i mysql --save</code><br><code>此时启动项目,用http://localhost:3000/user/login?username=aaa&amp;password=123来访问页面，会显示errno=0也就是成功登录</code><br><code>此时在user文件总再来新建一个路由，该路由是在登录后才能访问到的路由</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">router.get(&apos;/login-test&apos;,(req,res,next) =&gt; &#123;</span><br><span class="line">  res.json(new SuccessModel())</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p><code>但它没有鉴权就能直接访问到，所以通过cookie来实现一下鉴权，在login路由中当登录验证通过时，就在cookie里设置当前用户名，在test的路由里判断该用户名是否存在，如果存在就返回结果不存在就报错</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">router.get(&apos;/login&apos;,(req,res,next) =&gt; &#123;</span><br><span class="line">  const &#123; username, password &#125; = req.query</span><br><span class="line">  const result = login(username,password)</span><br><span class="line">  return result.then(data =&gt; &#123;</span><br><span class="line">    if(data)&#123;</span><br><span class="line">      res.setHeader(&apos;Set-Cookie&apos;,`username=$&#123;data&#125;;httpOnly;path:/;expires:1000*60;`)</span><br><span class="line">      return res.json(new SuccessModel())</span><br><span class="line">    &#125;</span><br><span class="line">    res.json(new ErrorModel(&apos;登录失败&apos;))</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">router.get(&apos;/login-test&apos;,(req,res,next) =&gt; &#123;</span><br><span class="line">	let userame = req.headers.cookie.split(&quot;=&quot;)[1]</span><br><span class="line">	if(userame === &apos;aaa&apos;)&#123;</span><br><span class="line">  	  res.json(new SuccessModel())</span><br><span class="line">	&#125;else&#123;</span><br><span class="line">  	  res.json(new SuccessModel(&apos;未登录&apos;))</span><br><span class="line">	&#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p><code>此时去访问http://localhost:3000/user/login?username=aaa&amp;password=123后再去访问http://localhost:3000/user/login-test就能实现简单的鉴权，但是用户名直接暴露在cookie中了，不安全，所以需要通过session将用户数据保存在服务端，客户端的cookie只存放与服务端session对应的一个sessionID，该sessionID没有实际的意义，不会暴露用户的信息</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">//app.js</span><br><span class="line">const session = require(&apos;express-session&apos;)</span><br><span class="line">const RedisStore = require(&apos;connect-redis&apos;)(session)</span><br><span class="line"></span><br><span class="line">const redisClient = require(&apos;./db/redis&apos;)</span><br><span class="line">const sessionStore = new RedisStore(&#123;</span><br><span class="line">  client: redisClient</span><br><span class="line">&#125;)</span><br><span class="line">app.use(session(&#123;</span><br><span class="line">  secret: &apos;ssdlsl2356DDs_&apos;,</span><br><span class="line">  resave: false,</span><br><span class="line">  saveUninitialized: true,</span><br><span class="line">  cookie: &#123;</span><br><span class="line">    maxAge: 24*60*60*1000</span><br><span class="line">  &#125;,</span><br><span class="line">  store: sessionStore</span><br><span class="line">&#125;))</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">router.get(&apos;/login&apos;, function(req, res, next) &#123;</span><br><span class="line">  const &#123; username, password &#125; = req.query</span><br><span class="line">  const result = login(username,password)</span><br><span class="line">  return result.then(data =&gt; &#123;</span><br><span class="line">    if(data)&#123;</span><br><span class="line">      req.session.username = data</span><br><span class="line">      return res.json(new SuccessModel())</span><br><span class="line">    &#125;</span><br><span class="line">    res.json(new ErrorModel(&apos;登录失败&apos;))</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">router.get(&apos;/login-check&apos;,(req,res,next) =&gt; &#123;</span><br><span class="line">  if(req.session.username)&#123;</span><br><span class="line">    res.json(&#123;</span><br><span class="line">      msg:&quot;success&quot;</span><br><span class="line">    &#125;)</span><br><span class="line">    return</span><br><span class="line">  &#125;</span><br><span class="line">  res.json(&#123;</span><br><span class="line">      msg:&quot;fail&quot;</span><br><span class="line">    &#125;)</span><br><span class="line">  </span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<div style="text-align:center;margin:30px;font-size:20px;border-radius:5px;border:3px solid #eee; cursor:pointer;" onclick="javascript:window.scrollTo(0, 0)">TOP</div>
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title='0' data-url='http://link.hhtjim.com/163/5146554.mp3'></li>
+                        
+                    
+                        
+                            <li title='1' data-url='http://link.hhtjim.com/qq/001faIUs4M2zna.mp3'></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/diaspora.js"></script>
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+</html>
